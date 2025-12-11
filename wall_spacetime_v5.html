@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piano Terra - Wall SpaceTime [2012 → Presente]</title>
+    <!-- R 0.05: Un solo font - Space Mono (rimosso Caveat) -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Archivo+Black&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --nero: #1a1a1a;
+            --rosso: #e63946;
+            --verde: #009639;
+            --verde-bright: #00ff7f;
+            --bianco: #f8f9fa;
+            --timeline-height: 70px;
+            --header-height: 70px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Mono', monospace;
+            background: var(--nero);
+            color: var(--bianco);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Header fisso */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: rgba(26,26,26,0.95);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            border-bottom: 3px solid var(--rosso);
+        }
+
+        /* R 0.05: Logo PT in alto SX (non scarrafone) */
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-shrink: 0;
+        }
+
+        .logo-img {
+            height: 45px;
+            width: auto;
+        }
+
+        .logo {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.3rem;
+        }
+
+        .logo span { color: var(--rosso); }
+
+        /* R 0.05: Centro - testo anno centrato */
+        .header-center {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        /* R 0.05: Font Space Mono uniformato (no Caveat) */
+        .current-period {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--verde-bright);
+            max-width: 500px;
+        }
+
+        /* R 0.05: Scorri nel tempo a DESTRA con lampeggio */
+        .header-right {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .scroll-hint-text {
+            font-size: 0.85rem;
+            color: var(--verde-bright);
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Free Palestine - in alto a destra */
+        .free-palestine {
+            position: fixed;
+            top: 0;
+            right: 0;
+            z-index: 1001;
+            width: 100px;
+            height: 100px;
+            overflow: hidden;
+        }
+
+        .free-palestine a {
+            position: absolute;
+            width: 150px;
+            padding: 5px 0;
+            background: var(--verde);
+            color: var(--bianco);
+            text-align: center;
+            font-size: 9px;
+            font-weight: bold;
+            text-decoration: none;
+            text-transform: uppercase;
+            transform: rotate(45deg);
+            top: 22px;
+            right: -40px;
+        }
+
+        .free-palestine a:hover { background: var(--rosso); }
+
+        /* R 0.05: Banner più grande (+5pt) e testo aggiornato */
+        .mockup-notice {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            right: 0;
+            background: linear-gradient(90deg, var(--verde), var(--rosso));
+            color: var(--bianco);
+            text-align: center;
+            padding: 0.4rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            z-index: 999;
+        }
+
+        /* Year index - quick navigation */
+        .year-index {
+            position: fixed;
+            top: calc(var(--header-height) + 35px);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.3rem;
+            z-index: 500;
+            background: rgba(26,26,26,0.9);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            border: 1px solid var(--verde);
+        }
+
+        .year-index button {
+            background: transparent;
+            border: none;
+            color: var(--bianco);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            padding: 0.2rem 0.4rem;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: all 0.2s;
+        }
+
+        .year-index button:hover,
+        .year-index button.active {
+            opacity: 1;
+            color: var(--verde-bright);
+        }
+
+        .year-index button.highlight {
+            background: var(--rosso);
+            color: var(--bianco);
+            border-radius: 3px;
+            opacity: 1;
+        }
+
+        .year-index button.highlight:hover {
+            animation: shake 0.3s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-2px); }
+            75% { transform: translateX(2px); }
+        }
+
+        /* MENU + LEGENDA UNIFICATI - R 0.05: scarrafone solo qui */
+        .menu-legend {
+            position: fixed;
+            top: calc(var(--header-height) + 35px);
+            left: 1rem;
+            background: rgba(26,26,26,0.95);
+            padding: 0.6rem 0.8rem;
+            font-size: 0.65rem;
+            z-index: 900;
+            border-left: 3px solid var(--verde);
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .menu-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            padding: 0.3rem 0.4rem;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-legend-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .menu-legend-item.active {
+            background: var(--verde);
+            color: var(--nero);
+        }
+
+        .menu-legend-item .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .menu-legend-item .dot.satellite {
+            border: 2px dashed rgba(255,255,255,0.6);
+            background: transparent;
+        }
+
+        .menu-legend-item .icon {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-legend-item .icon img {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+        }
+
+        /* Main scrollable area */
+        .spacetime-container {
+            position: fixed;
+            top: calc(var(--header-height) + 30px);
+            left: 0;
+            right: 0;
+            bottom: var(--timeline-height);
+            overflow-x: scroll;
+            overflow-y: hidden;
+            background-image: url('img/bg.webp');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        .spacetime-container::before {
+            content: '';
+            position: fixed;
+            top: calc(var(--header-height) + 30px);
+            left: 0;
+            right: 0;
+            bottom: var(--timeline-height);
+            background: rgba(0,0,0,0.5);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .spacetime-container::-webkit-scrollbar {
+            height: 0;
+        }
+
+        .spacetime-wall {
+            position: relative;
+            width: 6500px;
+            height: 100%;
+            padding: 2rem;
+        }
+
+        /* Year markers on wall */
+        .year-marker {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: rgba(255,255,255,0.1);
+            z-index: 2;
+        }
+
+        .year-marker::after {
+            content: attr(data-year);
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 3rem;
+            color: rgba(255,255,255,0.08);
+        }
+
+        /* Wall items - R 0.05: BREATHING 6-8% con intensità randomizzata */
+        .wall-item {
+            position: absolute;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10;
+            animation: breathe var(--breathe-duration, 4s) ease-in-out infinite;
+            animation-delay: var(--breathe-delay, 0s);
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1) rotate(var(--rotation, 0deg)); }
+            50% { transform: scale(var(--breathe-intensity, 1.07)) rotate(var(--rotation, 0deg)); }
+        }
+
+        .wall-item img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            filter: drop-shadow(4px 4px 8px rgba(0,0,0,0.6));
+        }
+
+        .wall-item:hover {
+            z-index: 100 !important;
+            animation-play-state: paused;
+            transform: scale(1.15) rotate(0deg) !important;
+        }
+
+        .wall-item:hover img {
+            filter: drop-shadow(8px 8px 25px rgba(0,0,0,0.8));
+        }
+
+        .wall-item.dimmed {
+            opacity: 0.1;
+            filter: grayscale(100%);
+            pointer-events: none;
+            animation: none;
+        }
+
+        /* Age-based opacity */
+        .wall-item[data-age="old"] img { opacity: 0.85; }
+        .wall-item[data-age="medium"] img { opacity: 0.92; }
+        .wall-item[data-age="recent"] img { opacity: 1; }
+
+        /* Category indicators */
+        .wall-item::after {
+            content: '';
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid var(--nero);
+        }
+
+        .wall-item[data-category="collettiva"]::after { background: var(--verde); }
+        .wall-item[data-category="evento"]::after { background: var(--rosso); }
+        .wall-item[data-category="campagna"]::after { background: var(--bianco); }
+        
+        /* SATELLITI */
+        .wall-item[data-category="satellite"]::after { 
+            background: transparent; 
+            border: 2px dashed rgba(255,255,255,0.6);
+        }
+
+        .wall-item[data-category="satellite"] {
+            animation: float 5s ease-in-out infinite, breathe 4s ease-in-out infinite;
+        }
+
+        .wall-item[data-category="satellite"] img {
+            opacity: 0.7;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        /* Tooltip */
+        .wall-item .tooltip {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--nero);
+            color: var(--bianco);
+            padding: 0.5rem 1rem;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.2s;
+            border-left: 3px solid var(--rosso);
+            pointer-events: none;
+            z-index: 200;
+        }
+
+        .wall-item .tooltip .year-tag {
+            color: var(--verde-bright);
+            font-weight: bold;
+        }
+
+        .wall-item:hover .tooltip {
+            opacity: 1;
+        }
+
+        /* ZOOM OVERLAY */
+        .zoom-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .zoom-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .zoom-content {
+            max-width: 80vw;
+            max-height: 80vh;
+            transform: scale(0.8);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .zoom-overlay.active .zoom-content {
+            transform: scale(1);
+        }
+
+        .zoom-content img {
+            max-width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+        }
+
+        .zoom-info {
+            text-align: center;
+            margin-top: 1rem;
+            max-width: 600px;
+        }
+
+        .zoom-info h2 {
+            font-family: 'Archivo Black', sans-serif;
+            color: var(--rosso);
+            margin-bottom: 0.5rem;
+        }
+
+        .zoom-info .meta {
+            font-family: 'Space Mono', monospace;
+            font-size: 1rem;
+            color: var(--verde-bright);
+        }
+
+        .zoom-info p {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .zoom-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: none;
+            border: none;
+            color: var(--bianco);
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .zoom-link {
+            display: inline-block;
+            margin-top: 1rem;
+            background: var(--rosso);
+            color: var(--bianco);
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            font-size: 0.8rem;
+        }
+
+        .zoom-link:hover { background: var(--verde); }
+
+        /* R 0.05: Timeline SEMPLIFICATA - solo anni, font più grande */
+        .timeline {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: var(--timeline-height);
+            background: rgba(26,26,26,0.98);
+            border-top: 3px solid var(--rosso);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .timeline-track {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timeline-inner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 6500px;
+            display: flex;
+            align-items: center;
+        }
+
+        .timeline-year {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 0.5rem;
+        }
+
+        .timeline-year:hover {
+            transform: scale(1.1);
+        }
+
+        /* R 0.05: Font più grande (+10%), no label sotto */
+        .timeline-year .year-num {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--bianco);
+            transition: all 0.2s;
+        }
+
+        .timeline-year .dot {
+            width: 10px;
+            height: 10px;
+            background: var(--rosso);
+            border-radius: 50%;
+            margin-bottom: 0.3rem;
+        }
+
+        /* R 0.05: Anno attivo verde bright, font ancora più grande */
+        .timeline-year.active .dot {
+            background: var(--verde-bright);
+            box-shadow: 0 0 15px var(--verde-bright);
+        }
+
+        .timeline-year.active .year-num {
+            color: var(--verde-bright);
+            font-size: 1.3rem;
+        }
+
+        .timeline-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--rosso) 0%, var(--verde) 50%, var(--bianco) 100%);
+            transform: translateY(-50%);
+            z-index: -1;
+        }
+
+        .timeline-progress {
+            height: 3px;
+            background: #333;
+        }
+
+        .timeline-progress-bar {
+            height: 100%;
+            background: var(--verde-bright);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        /* Scroll hint arrows */
+        .scroll-hint {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: var(--bianco);
+            opacity: 0.3;
+            z-index: 100;
+            pointer-events: none;
+            animation: pulse 2s infinite;
+        }
+
+        .scroll-hint.left { left: 1rem; }
+        .scroll-hint.right { right: 1rem; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Period labels on wall */
+        .period-label {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%) rotate(-90deg);
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.15);
+            white-space: nowrap;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* Instructions overlay */
+        .instructions-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 1;
+            transition: opacity 0.5s;
+        }
+
+        .instructions-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .instructions-content {
+            text-align: center;
+            max-width: 550px;
+            padding: 2rem;
+        }
+
+        .instructions-content h2 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .instructions-content h2 span { color: var(--rosso); }
+
+        .instructions-content p {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        /* R 0.05: Concept con Space Mono, no Caveat */
+        .instructions-content .concept {
+            font-style: italic;
+            color: var(--verde-bright);
+            border-left: 3px solid var(--verde);
+            padding-left: 1rem;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+
+        .instructions-content .keys {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .instructions-content .key {
+            background: #333;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--bianco);
+            font-size: 0.8rem;
+        }
+
+        .instructions-content button {
+            background: var(--rosso);
+            border: none;
+            color: var(--bianco);
+            padding: 1rem 2rem;
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .instructions-content button:hover { background: var(--verde); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header { padding: 0 1rem; }
+            .header-center { display: none; }
+            .scroll-hint { display: none; }
+            .scroll-hint-text { display: none; }
+            .menu-legend { 
+                top: auto; 
+                bottom: calc(var(--timeline-height) + 10px); 
+                flex-direction: row;
+                flex-wrap: wrap;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="free-palestine">
+        <a href="https://bdsmovement.net/" target="_blank">Free Palestine 🍉</a>
+    </div>
+
+    <!-- R 0.05: Testo banner aggiornato -->
+    <div class="mockup-notice">
+        WALL SPACETIME — ARCHEOLOGIA STRATIFICATA DEL PRESENTE — 2012 → OGGI
+    </div>
+
+    <header>
+        <!-- R 0.05: Logo PT (non scarrafone) -->
+        <div class="header-left">
+            <img src="img/logoPT_80.png" alt="Piano Terra" class="logo-img">
+            <div class="logo">Piano<span>Terra</span></div>
+        </div>
+        <!-- R 0.05: Centro con anno/periodo -->
+        <div class="header-center">
+            <div class="current-period" id="currentPeriod">2012 — Occupazione: nasce Piano Terra</div>
+        </div>
+        <!-- R 0.05: Scorri nel tempo a destra, lampeggiante -->
+        <div class="header-right">
+            <span class="scroll-hint-text">scorri nel tempo →→→→</span>
+        </div>
+    </header>
+
+    <!-- R 0.05: Scarrafone SOLO qui in legenda -->
+    <div class="menu-legend" id="menuLegend">
+        <div class="menu-legend-item active" data-filter="all">
+            <div class="icon"><img src="img/scarrafone.png" alt="PT"></div>
+            <span>TUTTO</span>
+        </div>
+        <div class="menu-legend-item" data-filter="collettiva">
+            <div class="dot" style="background:var(--verde)"></div>
+            <span>COLLETTIVE</span>
+        </div>
+        <div class="menu-legend-item" data-filter="evento">
+            <div class="dot" style="background:var(--rosso)"></div>
+            <span>EVENTI</span>
+        </div>
+        <div class="menu-legend-item" data-filter="campagna">
+            <div class="dot" style="background:var(--bianco)"></div>
+            <span>CAMPAGNE</span>
+        </div>
+        <div class="menu-legend-item" data-filter="satellite">
+            <div class="dot satellite"></div>
+            <span>SATELLITI</span>
+        </div>
+    </div>
+
+    <div class="year-index" id="yearIndex">
+        <button data-year="2012" class="highlight">2012</button>
+        <button data-year="2013">13</button>
+        <button data-year="2014">14</button>
+        <button data-year="2015" class="highlight">2015</button>
+        <button data-year="2016">16</button>
+        <button data-year="2017">17</button>
+        <button data-year="2018">18</button>
+        <button data-year="2019">19</button>
+        <button data-year="2020" class="highlight">2020</button>
+        <button data-year="2021">21</button>
+        <button data-year="2022">22</button>
+        <button data-year="2023">23</button>
+        <button data-year="2024">24</button>
+        <button data-year="2025" class="highlight">→</button>
+    </div>
+
+    <div class="scroll-hint left">◀</div>
+    <div class="scroll-hint right">▶</div>
+
+    <div class="spacetime-container" id="spacetimeContainer">
+        <div class="spacetime-wall" id="spacetimeWall">
+        </div>
+    </div>
+
+    <!-- R 0.05: Timeline semplificata -->
+    <div class="timeline">
+        <div class="timeline-progress">
+            <div class="timeline-progress-bar" id="progressBar"></div>
+        </div>
+        <div class="timeline-track">
+            <div class="timeline-inner" id="timelineInner">
+                <div class="timeline-line"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ZOOM OVERLAY -->
+    <div class="zoom-overlay" id="zoomOverlay" onclick="closeZoom(event)">
+        <button class="zoom-close" onclick="closeZoom(event)">×</button>
+        <div class="zoom-content" id="zoomContent"></div>
+    </div>
+
+    <div class="instructions-overlay" id="instructionsOverlay">
+        <div class="instructions-content">
+            <h2>Wall <span>SpaceTime</span></h2>
+            <p>13 anni di Piano Terra.<br>Scorri orizzontalmente per viaggiare nel tempo dello spazio.</p>
+            <div class="concept">
+                "Il muro come archeologia del presente.<br>
+                Non timeline lineare ma stratificazione esplorabile.<br>
+                Il tempo non si legge, si attraversa."<br><br>
+                Le immagini respirano — come il cuore pulsante<br>
+                di uno spazio che vive e cospira.
+            </div>
+            <div class="keys">
+                <div class="key">← →</div>
+                <div class="key">Scroll</div>
+                <div class="key">Click = Zoom</div>
+            </div>
+            <p style="font-size: 0.8rem; opacity: 0.7;">Clicca sugli elementi per espanderli.<br>Usa i filtri per esplorare per categoria.</p>
+            <button onclick="startExploring()">Inizia l'esplorazione →</button>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // CONFIGURAZIONE
+        // ============================================
+
+        const CONFIG = {
+            startYear: 2012,
+            endYear: 2025,
+            wallWidth: 6500,
+            yearWidth: 470,
+            offsetStart: 100
+        };
+
+        const PERIODS = {
+            2012: "Occupazione: Off Topic, San Precario, Ambrosia, CineSenzaForum",
+            2013: "Crescita: arriva APE Milano, 161 eventi",
+            2014: "Mobilitazione NoExpo in costruzione",
+            2015: "Esplosione: 1° Maggio 80.000 in piazza",
+            2016: "Post-Expo, Rete Jin al PT",
+            2017: "Consolidamento",
+            2018: "Nuove energie: 104 eventi, Wall of Fame",
+            2019: "Maturità: APE associazione, Palestina al PT",
+            2020: "Pandemia: resistenza e mutualismo",
+            2021: "Rinascita: nasce Conserere",
+            2022: "Nuova era: nasce AKME, 10 anni PT",
+            2023: "11 anni di autogestione",
+            2024: "Gaza, NoOlimpiadi verso 2026",
+            2025: "Il presente: la lotta continua"
+        };
+
+        // DATI - identici alla v4
+        const items = [
+            { id: 'pt-logo', img: 'img/logoPT_80.png', title: 'Nasce Piano Terra', category: 'collettiva', description: '2 marzo 2012: occupazione dello spazio in via Confalonieri 3.', link: 'https://www.pianoterralab.org', year: 2012, month: 3, size: 160, offsetY: 25 },
+            { id: 'offtopic-nasce', img: 'img/offtopicwesite.png', title: 'Off Topic Lab', category: 'collettiva', description: 'Tra i fondatori dello spazio. Inchiesta urbana, critica della metropoli.', link: 'https://www.offtopiclab.org', year: 2012, month: 3, size: 200, offsetY: 50 },
+            { id: 'sanprecario', img: 'img/sanprecariologo.png', title: 'San Precario', category: 'collettiva', description: 'Tra i fondatori. Il santo dei precari, lotta contro lo sfruttamento.', year: 2012, month: 3, size: 150, offsetY: 75 },
+            { id: 'noexpo-inizio', img: 'img/noexposticker.png', title: 'Serata No Tav - No Expo', category: 'campagna', description: '23 marzo 2012: primo evento NoExpo al PT.', year: 2012, month: 3, size: 120, offsetY: 15 },
+            { id: 'burlexotan', img: 'img/burlexotan.jpg', title: 'Nasce Burlexotan', category: 'satellite', description: 'Cabaret Orangiste. 38 serate di risate sovversive.', year: 2012, month: 4, size: 140, offsetY: 60 },
+            { id: 'retejin-primo', img: 'img/retejinlogo.webp', title: 'Primo evento curdo', category: 'collettiva', description: 'La solidarietà curda al PT dal primo anno.', link: 'https://retejin.com', year: 2012, month: 5, size: 120, offsetY: 35 },
+            { id: 'ambrosia', img: 'img/ambrosiacampagna.png', title: 'Nasce Ambrosia', category: 'collettiva', description: 'Gruppo femminista e queer del PT.', link: 'https://ambrosia.noblogs.org', year: 2012, month: 6, size: 180, offsetY: 20 },
+            { id: 'antifa', img: 'img/antifasciststick.jpg', title: 'Antifascismo Sempre', category: 'campagna', description: "L'antifascismo non è un'opinione. Dal primo giorno.", year: 2012, month: 6, size: 110, offsetY: 80 },
+            { id: 'cinesenzaforum', img: 'img/esternoPT.jpg', title: 'Nasce CineSenzaForum', category: 'collettiva', description: '103 proiezioni in 13 anni.', year: 2012, month: 12, size: 160, offsetY: 45 },
+            { id: 'ape', img: 'img/APELOGO.jpg', title: 'APE Milano al PT', category: 'collettiva', description: 'La montagna per tutti. 104 eventi.', link: 'https://ape-alveare.it/ape-milano', year: 2013, month: 1, size: 150, offsetY: 30 },
+            { id: '1compleanno', img: 'img/3compleanno.png', title: '1° Compleanno PT', category: 'evento', description: 'Un anno di autogestione!', year: 2013, month: 3, size: 170, offsetY: 55 },
+            { id: 'quaderni4', img: 'img/QuaderniSanPrecario4.jpg', title: 'Quaderni San Precario #4', category: 'campagna', description: 'Precarious of the world unite!', year: 2013, month: 6, size: 160, offsetY: 70 },
+            { id: 'autistici', img: 'img/flagautistici.png', title: 'Autistici/Inventati', category: 'campagna', description: 'Servizi tech per attivisti.', link: 'https://autistici.org', year: 2013, month: 9, size: 120, offsetY: 20 },
+            { id: 'noexpo-cresce', img: 'img/noexpoOfftopic.jpg', title: 'NoExpo cresce', category: 'campagna', description: 'Off Topic e decine di realtà milanesi costruiscono la mobilitazione.', year: 2014, month: 9, size: 190, offsetY: 40 },
+            { id: '3compleanno', img: 'img/3compleanno.png', title: '3 Anni di Autogestione', category: 'evento', description: 'Ricomincio da 3', year: 2015, month: 2, size: 180, offsetY: 20 },
+            { id: '1maggio-noexpo', img: 'img/noexpopride.png', title: '1° Maggio NoExpo', category: 'evento', description: '80.000 persone in piazza! Storico.', year: 2015, month: 5, size: 250, offsetY: 35 },
+            { id: 'noexpo-banner', img: 'img/noexpo.png', title: 'Expo Milano 2015', category: 'campagna', description: 'La lotta contro l\'Expo.', year: 2015, month: 5, size: 180, offsetY: 65 },
+            { id: 'pieghevole', img: 'img/pieghevole.jpg', title: 'Nasce Pieghevole', category: 'campagna', description: 'La zine autoprodotta di Off Topic Lab.', link: 'https://www.offtopiclab.org', year: 2015, month: 9, size: 150, offsetY: 75 },
+            { id: 'retejin', img: 'img/retejinlogo.webp', title: 'Rete Jin consolidata', category: 'collettiva', description: 'Jin Jiyan Azadi - Donna Vita Libertà.', link: 'https://retejin.com', year: 2016, month: 3, size: 140, offsetY: 40 },
+            { id: 'wallfame1', img: 'img/wallfumetti.jpg', title: 'Wall of Fame - Inizio', category: 'campagna', description: 'Il muro dei personaggi.', year: 2017, month: 6, size: 200, offsetY: 70 },
+            { id: '6compleanno', img: 'img/logoPT_80.png', title: '6° Compleanno PT', category: 'evento', description: 'Sei anni!', year: 2018, month: 3, size: 150, offsetY: 25 },
+            { id: 'wallfame2', img: 'img/wallpersonaggi-inserire.jpg', title: 'Wall of Fame - Cresce', category: 'campagna', description: 'Marx, Orwell, Zappa...', year: 2018, month: 9, size: 220, offsetY: 55 },
+            { id: 'deliverance', img: 'img/deliverancelogo.jpg', title: 'Deliverance', category: 'collettiva', description: 'Collettivo riders.', year: 2018, month: 6, size: 130, offsetY: 78 },
+            { id: 'ape-locandina', img: 'img/Locandina-APE.jpg', title: 'APE - In cammino', category: 'evento', description: 'Da Cortina a Milano: 250km.', link: 'https://ape-alveare.it/ape-milano', year: 2019, month: 1, size: 180, offsetY: 45 },
+            { id: 'compleanno2019', img: 'img/compleanno2019.jpg', title: '7 Anni di PT', category: 'evento', description: 'The Dolphians + CineSenzaForum Birthday!', year: 2019, month: 3, size: 220, offsetY: 20 },
+            { id: 'palestina-primo', img: 'img/100x110gaza.jpg', title: 'Dhakira Project - Gaza', category: 'campagna', description: 'La Palestina entra al PT.', year: 2019, month: 2, size: 150, offsetY: 70 },
+            { id: 'noolimpiadi-inizio', img: 'img/CIO-offtopic.jpeg', title: 'NoOlimpiadi al PT', category: 'campagna', description: 'Le ragioni del No.', year: 2019, month: 10, size: 170, offsetY: 38 },
+            { id: 'pandemia', img: 'img/esternofuckpt.jpg', title: 'Pandemia - Resistiamo', category: 'evento', description: 'Il PT non si ferma.', year: 2020, month: 3, size: 220, offsetY: 40 },
+            { id: 'conserere', img: 'img/piano_terra_11anni.jpg', title: 'Nasce Conserere', category: 'collettiva', description: 'Laboratorio di Improvvisazione.', year: 2021, month: 10, size: 170, offsetY: 55 },
+            { id: 'akme', img: 'img/akmewebsite.png', title: 'Nasce A-K-M-E', category: 'collettiva', description: 'Hacktivism e autodeterminazione digitale.', link: 'https://akme.vado.li', year: 2022, month: 4, size: 220, offsetY: 25 },
+            { id: '10anni', img: 'img/logoPT_80.png', title: '10 Anni PT', category: 'evento', description: 'Un decennio di autogestione.', year: 2022, month: 3, size: 170, offsetY: 65 },
+            { id: '11anni', img: 'img/piano_terra_11anni.jpg', title: '11 Anni di PT', category: 'evento', description: 'Conserere Orchestra dal vivo.', link: 'https://www.pianoterralab.org', year: 2023, month: 3, size: 220, offsetY: 30 },
+            { id: '8marzo', img: 'img/8M-Milano-banner.jpeg', title: '8 Marzo NUDM', category: 'evento', description: 'Sciopero femminista.', year: 2023, month: 3, size: 200, offsetY: 58 },
+            { id: 'gaza100', img: 'img/100x110gaza.jpg', title: '100 Giorni Gaza', category: 'campagna', description: '100 giorni di genocidio.', year: 2024, month: 1, size: 160, offsetY: 20 },
+            { id: 'noolimpiadi-2024', img: 'img/CIO-offtopic.jpeg', title: 'NoOlimpiadi 2026', category: 'campagna', description: 'Resistenza territoriale.', year: 2024, month: 9, size: 170, offsetY: 65 },
+            { id: 'gaza-benefit', img: 'img/autofinanziamentogaza.jpg', title: 'Benefit Palestina', category: 'evento', description: 'Cena e concerto benefit.', year: 2024, month: 12, size: 190, offsetY: 40 },
+            { id: 'sat-dax', img: 'img/antifasciststick.jpg', title: 'DAX Resiste', category: 'satellite', description: 'Progetto antifascista.', year: 2015, month: 3, size: 95, offsetY: 85 },
+            { id: 'sat-yogalibre', img: 'img/logoPT_80.png', title: 'Yoga Libre', category: 'satellite', description: 'Pratica accessibile e autogestita.', year: 2013, month: 5, size: 80, offsetY: 88 },
+            { id: 'sat-palestra', img: 'img/logoPT_80.png', title: 'Palestra Popolare', category: 'satellite', description: 'Sport per tutti.', year: 2012, month: 11, size: 85, offsetY: 90 },
+            { id: 'sat-nudm', img: 'img/8M-Milano-banner.jpeg', title: 'Assemblea NUDM', category: 'satellite', description: 'Non Una Di Meno Milano.', year: 2017, month: 1, size: 100, offsetY: 82 },
+            { id: 'sat-riders', img: 'img/deliverancelogo.jpg', title: 'Assemblea Riders', category: 'satellite', description: 'Organizzazione dal basso.', year: 2018, month: 10, size: 85, offsetY: 87 },
+            { id: 'sat-teatro', img: 'img/milanohorrorfumetto.jpg', title: 'Compagnie teatrali', category: 'satellite', description: 'Il teatro passa dal PT.', year: 2014, month: 6, size: 105, offsetY: 83 },
+            { id: 'presente', img: 'img/esternoPT.jpg', title: 'Il Presente', category: 'collettiva', description: '13 anni. 1110 eventi. La lotta continua.', link: 'https://www.pianoterralab.org', year: 2025, month: 1, size: 220, offsetY: 35 }
+        ];
+
+        // ============================================
+        // FUNZIONI
+        // ============================================
+
+        const wall = document.getElementById('spacetimeWall');
+        const container = document.getElementById('spacetimeContainer');
+        const timelineInner = document.getElementById('timelineInner');
+        const progressBar = document.getElementById('progressBar');
+        const currentPeriodEl = document.getElementById('currentPeriod');
+
+        function getXPosition(year, month = 6) {
+            const yearOffset = year - CONFIG.startYear;
+            const monthOffset = (month - 1) / 12;
+            return CONFIG.offsetStart + (yearOffset + monthOffset) * CONFIG.yearWidth;
+        }
+
+        function getAge(year) {
+            if (year <= 2015) return 'old';
+            if (year <= 2020) return 'medium';
+            return 'recent';
+        }
+
+        function renderWall() {
+            for (let year = CONFIG.startYear; year <= CONFIG.endYear; year++) {
+                const marker = document.createElement('div');
+                marker.className = 'year-marker';
+                marker.dataset.year = year;
+                marker.style.left = `${getXPosition(year, 1)}px`;
+                wall.appendChild(marker);
+            }
+
+            const periods = [
+                { year: 2012, label: 'NASCITA' },
+                { year: 2015, label: 'NOEXPO' },
+                { year: 2020, label: 'PANDEMIA' },
+                { year: 2024, label: 'OGGI' }
+            ];
+
+            periods.forEach(p => {
+                const label = document.createElement('div');
+                label.className = 'period-label';
+                label.textContent = p.label;
+                label.style.left = `${getXPosition(p.year, 6) + 20}px`;
+                wall.appendChild(label);
+            });
+
+            // R 0.05: Breathing con intensità randomizzata 6-10%
+            items.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'wall-item';
+                div.dataset.category = item.category;
+                div.dataset.id = item.id;
+                div.dataset.year = item.year;
+                div.dataset.age = getAge(item.year);
+
+                const rotation = (Math.random() - 0.5) * 12;
+                const x = getXPosition(item.year, item.month) + (Math.random() - 0.5) * 60;
+                const y = item.offsetY + (Math.random() - 0.5) * 15;
+
+                const breatheDuration = 3 + Math.random() * 3;
+                const breatheDelay = Math.random() * 2;
+                const breatheIntensity = 1.06 + Math.random() * 0.04; // 6-10%
+
+                div.style.setProperty('--rotation', `${rotation}deg`);
+                div.style.setProperty('--breathe-duration', `${breatheDuration}s`);
+                div.style.setProperty('--breathe-delay', `${breatheDelay}s`);
+                div.style.setProperty('--breathe-intensity', breatheIntensity);
+                div.style.left = `${x}px`;
+                div.style.top = `${y}%`;
+                div.style.width = `${item.size}px`;
+                div.style.zIndex = 10 + index;
+
+                div.innerHTML = `
+                    <img src="${item.img}" alt="${item.title}">
+                    <div class="tooltip">
+                        <span class="year-tag">${item.year}</span> — ${item.title}
+                    </div>
+                `;
+
+                div.onclick = () => openZoom(item);
+                wall.appendChild(div);
+            });
+        }
+
+        // R 0.05: Timeline semplificata - solo anni
+        function renderTimeline() {
+            for (let year = CONFIG.startYear; year <= CONFIG.endYear; year++) {
+                const yearEl = document.createElement('div');
+                yearEl.className = 'timeline-year';
+                yearEl.dataset.year = year;
+                yearEl.style.left = `${getXPosition(year, 6)}px`;
+
+                yearEl.innerHTML = `
+                    <div class="dot"></div>
+                    <div class="year-num">${year}</div>
+                `;
+
+                yearEl.onclick = () => scrollToYear(year);
+                timelineInner.appendChild(yearEl);
+            }
+        }
+
+        function scrollToYear(year) {
+            const x = getXPosition(year, 1) - window.innerWidth / 3;
+            container.scrollTo({ left: x, behavior: 'smooth' });
+        }
+
+        // R 0.05: FIX sincronizzazione - calcolo corretto
+        function syncTimeline() {
+            const scrollLeft = container.scrollLeft;
+            const maxScroll = container.scrollWidth - container.clientWidth;
+            const progress = Math.min((scrollLeft / maxScroll) * 100, 100);
+            
+            progressBar.style.width = `${progress}%`;
+            timelineInner.style.transform = `translateX(-${scrollLeft}px)`;
+
+            // Calcolo anno basato su posizione scroll
+            const scrollRatio = scrollLeft / (CONFIG.wallWidth - container.clientWidth);
+            const yearRange = CONFIG.endYear - CONFIG.startYear;
+            const currentYear = Math.min(
+                Math.max(
+                    Math.round(CONFIG.startYear + scrollRatio * yearRange),
+                    CONFIG.startYear
+                ),
+                CONFIG.endYear
+            );
+
+            currentPeriodEl.textContent = `${currentYear} — ${PERIODS[currentYear] || ''}`;
+
+            document.querySelectorAll('.timeline-year').forEach(el => {
+                el.classList.toggle('active', parseInt(el.dataset.year) === currentYear);
+            });
+
+            document.querySelectorAll('.year-index button').forEach(btn => {
+                const btnYear = parseInt(btn.dataset.year);
+                btn.classList.toggle('active', btnYear === currentYear);
+            });
+        }
+
+        document.querySelectorAll('.menu-legend-item').forEach(item => {
+            item.onclick = () => {
+                document.querySelectorAll('.menu-legend-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+
+                const filter = item.dataset.filter;
+                document.querySelectorAll('.wall-item').forEach(wallItem => {
+                    const show = filter === 'all' || wallItem.dataset.category === filter;
+                    wallItem.classList.toggle('dimmed', !show);
+                });
+            };
+        });
+
+        document.querySelectorAll('.year-index button').forEach(btn => {
+            btn.onclick = () => scrollToYear(parseInt(btn.dataset.year));
+        });
+
+        function openZoom(item) {
+            const overlay = document.getElementById('zoomOverlay');
+            const content = document.getElementById('zoomContent');
+            const monthNames = ['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
+
+            content.innerHTML = `
+                <img src="${item.img}" alt="${item.title}">
+                <div class="zoom-info">
+                    <div class="meta">📅 ${item.year}${item.month ? ` — ${monthNames[item.month-1]}` : ''}</div>
+                    <h2>${item.title}</h2>
+                    <p>${item.description}</p>
+                    ${item.link ? `<a href="${item.link}" target="_blank" class="zoom-link">Vai al sito →</a>` : ''}
+                </div>
+            `;
+
+            overlay.classList.add('active');
+        }
+
+        function closeZoom(event) {
+            if (event.target.classList.contains('zoom-overlay') || event.target.classList.contains('zoom-close')) {
+                document.getElementById('zoomOverlay').classList.remove('active');
+            }
+        }
+
+        function startExploring() {
+            document.getElementById('instructionsOverlay').classList.add('hidden');
+            container.scrollTo({ left: 0 });
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('zoomOverlay').classList.remove('active');
+            }
+            if (e.key === 'ArrowRight') container.scrollBy({ left: 200, behavior: 'smooth' });
+            if (e.key === 'ArrowLeft') container.scrollBy({ left: -200, behavior: 'smooth' });
+        });
+
+        // INIT
+        renderWall();
+        renderTimeline();
+        container.addEventListener('scroll', syncTimeline);
+        syncTimeline();
+        container.scrollTo({ left: 0 });
+    </script>
+
+</body>
+</html>
