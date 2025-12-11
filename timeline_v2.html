@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piano Terra - Timeline 2012-2025 [MOCKUP]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Archivo+Black&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Palette Palestina */
+            --nero: #1a1a1a;
+            --rosso: #e63946;
+            --verde: #009639;
+            --bianco: #f8f9fa;
+            --grigio: #2d2d2d;
+        }
+
+        /* Breathing animation */
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Mono', monospace;
+            background-color: var(--nero);
+            color: var(--bianco);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Noise texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Free Palestine banner - stile Autistici */
+        .free-palestine {
+            position: fixed;
+            top: 0;
+            right: 0;
+            z-index: 9999;
+            overflow: hidden;
+            width: 150px;
+            height: 150px;
+            pointer-events: none;
+        }
+
+        .free-palestine a {
+            pointer-events: auto;
+            position: absolute;
+            display: block;
+            width: 200px;
+            padding: 8px 0;
+            background: var(--verde);
+            color: var(--bianco);
+            text-align: center;
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            font-weight: bold;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transform: rotate(45deg);
+            top: 35px;
+            right: -50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            transition: background 0.2s;
+        }
+
+        .free-palestine a:hover {
+            background: var(--rosso);
+        }
+
+        /* Mockup notice - stile Wall */
+        .mockup-notice {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(90deg, var(--verde), var(--rosso));
+            color: var(--bianco);
+            text-align: center;
+            padding: 0.4rem;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            z-index: 9998;
+        }
+
+        /* Header */
+        header {
+            padding: 1.5rem 2rem;
+            padding-right: 160px;
+            padding-top: 2.5rem; /* spazio per mockup notice */
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            border-bottom: 3px solid var(--rosso);
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--verde);
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            flex-shrink: 0;
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .logo {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            text-transform: uppercase;
+            letter-spacing: -2px;
+        }
+
+        .logo span {
+            color: var(--rosso);
+        }
+
+        .tagline {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--verde);
+            margin-left: auto;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1rem;
+            flex-wrap: wrap;
+            background: var(--grigio);
+        }
+
+        nav a {
+            color: var(--bianco);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        nav a:hover {
+            border-color: var(--verde);
+            color: var(--verde);
+        }
+
+        nav a.active {
+            background: var(--rosso);
+            border-color: var(--rosso);
+        }
+
+        /* Main content */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            padding-bottom: 4rem; /* spazio per mockup notice */
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            border-left: 4px solid var(--rosso);
+            background: linear-gradient(90deg, rgba(230,57,70,0.1) 0%, transparent 100%);
+        }
+
+        .intro h1 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            margin-bottom: 1rem;
+        }
+
+        .intro h1 .year {
+            color: var(--verde);
+        }
+
+        .intro p {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, 
+                var(--rosso) 0%, 
+                var(--verde) 33%, 
+                var(--bianco) 50%, 
+                var(--rosso) 66%,
+                var(--verde) 100%);
+        }
+
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 20px;
+            }
+        }
+
+        .year-marker {
+            text-align: center;
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .year-marker h2 {
+            display: inline-block;
+            background: var(--nero);
+            padding: 0.5rem 2rem;
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 2rem;
+            color: var(--bianco);
+            border: 3px solid var(--verde);
+            position: relative;
+            z-index: 10;
+        }
+
+        .year-marker h2::before {
+            content: '▶';
+            margin-right: 0.5rem;
+            color: var(--rosso);
+        }
+
+        .event {
+            display: flex;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .event:nth-child(odd) {
+            flex-direction: row-reverse;
+        }
+
+        @media (max-width: 768px) {
+            .event, .event:nth-child(odd) {
+                flex-direction: row;
+                padding-left: 50px;
+            }
+        }
+
+        .event-content {
+            width: 45%;
+            padding: 1.5rem;
+            background: var(--grigio);
+            border: 2px solid transparent;
+            position: relative;
+            transition: all 0.3s;
+            animation: breathe 5s ease-in-out infinite;
+            animation-delay: var(--delay, 0s);
+        }
+
+        @media (max-width: 768px) {
+            .event-content {
+                width: 100%;
+            }
+        }
+
+        .event-content:hover {
+            border-color: var(--verde);
+            transform: translateY(-5px) scale(1.02);
+            animation-play-state: paused;
+        }
+
+        .event-content::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            width: 20px;
+            height: 20px;
+            background: var(--rosso);
+            border-radius: 50%;
+            border: 4px solid var(--nero);
+        }
+
+        .event:nth-child(odd) .event-content::before {
+            left: -35px;
+        }
+
+        .event:nth-child(even) .event-content::before {
+            right: -35px;
+        }
+
+        @media (max-width: 768px) {
+            .event-content::before {
+                left: -40px !important;
+                right: auto !important;
+            }
+        }
+
+        .event-date {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--verde);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .event-title {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .event-description {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        .event-tags {
+            margin-top: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            background: var(--nero);
+            border: 1px solid var(--verde);
+            color: var(--verde);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Stats section */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 3rem 0;
+            padding: 2rem;
+            background: var(--grigio);
+            border-top: 4px solid var(--rosso);
+            border-bottom: 4px solid var(--verde);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 3rem;
+            color: var(--verde);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+
+        /* Groups section */
+        .groups-preview {
+            margin: 3rem 0;
+        }
+
+        .groups-preview h2 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .groups-preview h2::before {
+            content: '';
+            flex: 1;
+            height: 3px;
+            background: var(--rosso);
+        }
+
+        .groups-preview h2::after {
+            content: '';
+            flex: 1;
+            height: 3px;
+            background: var(--rosso);
+        }
+
+        .groups-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .group-card {
+            padding: 1.5rem;
+            background: var(--grigio);
+            border-left: 4px solid var(--rosso);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .group-card:nth-child(2n) {
+            border-left-color: var(--verde);
+        }
+
+        .group-card:nth-child(3n) {
+            border-left-color: var(--bianco);
+        }
+
+        .group-card:hover {
+            transform: translateX(10px);
+            background: var(--nero);
+        }
+
+        .group-name {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .group-focus {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .group-when {
+            font-size: 0.7rem;
+            color: var(--verde);
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 4rem;
+            padding: 2rem;
+            background: var(--grigio);
+            text-align: center;
+            border-top: 3px solid var(--rosso);
+        }
+
+        .footer-slogan {
+            font-family: 'Caveat', cursive;
+            font-size: 2rem;
+            color: var(--verde);
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+
+        .footer-links a {
+            color: var(--bianco);
+            text-decoration: none;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+            color: var(--verde);
+        }
+
+        .puntello-badge {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--verde);
+            color: var(--verde);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Glitch effect on hover for logo */
+        .logo:hover {
+            animation: glitch 0.3s ease;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        /* Scroll indicator */
+        .scroll-hint {
+            text-align: center;
+            padding: 1rem;
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-hint span {
+            font-size: 2rem;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(10px); }
+        }
+
+        /* Palestine flag colors accent */
+        .palestine-accent {
+            background: linear-gradient(90deg, 
+                #000 0%, #000 25%, 
+                #fff 25%, #fff 50%, 
+                #009639 50%, #009639 75%, 
+                #e63946 75%, #e63946 100%);
+            height: 4px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Free Palestine banner come Autistici -->
+    <div class="free-palestine">
+        <a href="https://bdsmovement.net/" target="_blank" rel="noopener">Free Palestine 🍉</a>
+    </div>
+
+    <!-- Mockup notice -->
+    <div class="mockup-notice">
+        Timeline PT — Archeologia Stratificata del Presente — 2012 → Oggi
+    </div>
+
+    <header>
+        <div class="logo-icon">
+            <img src="img/logoPT_80.png" alt="Piano Terra">
+        </div>
+        <div class="logo">Piano<span>Terra</span></div>
+        <div class="tagline">13 anni di autogestione</div>
+    </header>
+
+    <div class="palestine-accent"></div>
+
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">Gruppi</a>
+        <a href="#">Calendario</a>
+        <a href="#" class="active">Timeline</a>
+        <a href="#">Chi Siamo</a>
+        <a href="#">Contatti</a>
+    </nav>
+
+    <main>
+        <section class="intro">
+            <h1>13 anni di autogestione<br><span class="year">2012 → 2025</span></h1>
+            <p>Un'isola sottosopra nel cuore dell'Isola. Questa è la nostra storia, fatta di assemblee, concerti, proiezioni, lotte, incontri, cene sociali e resistenza quotidiana ai piedi dei grattacieli.</p>
+        </section>
+
+        <div class="scroll-hint">
+            <span>↓</span>
+        </div>
+
+        <section class="stats">
+            <div class="stat">
+                <div class="stat-number">13</div>
+                <div class="stat-label">Anni di attività</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">9+</div>
+                <div class="stat-label">Gruppi attivi</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">∞</div>
+                <div class="stat-label">Eventi organizzati</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">1</div>
+                <div class="stat-label">Casa comune</div>
+            </div>
+        </section>
+
+        <section class="timeline">
+            <!-- 2012 -->
+            <div class="year-marker">
+                <h2>2012</h2>
+            </div>
+
+            <div class="event">
+                <div class="event-content">
+                    <div class="event-date">2 Marzo 2012</div>
+                    <div class="event-title">🏠 OCCUPAZIONE DI PIANO TERRA</div>
+                    <div class="event-description">
+                        "C'è chi gratta il cielo e chi all'Isola sta al Piano Terra!" Al civico 3 di via F. Confalonieri, stretta tra il Bosco Verticale e il fortino della Regione, nasce uno spazio sociale autogestito.
+                    </div>
+                    <div class="event-tags">
+                        <span class="tag">occupazione</span>
+                        <span class="tag">isola</span>
+                        <span class="tag">autogestione</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="event">
+                <div class="event-content">
+                    <div class="event-date">Autunno 2012</div>
+                    <div class="event-title">🎬 Nasce #cinesenzaforum</div>
+                    <div class="event-description">
+                        La domenica sera diventa appuntamento fisso con il cinema. Fitzcarraldo, Bottle Rocket, Dreams, Clerks... inizia una tradizione che dura ancora oggi.
+                    </div>
+                    <div class="event-tags">
+                        <span class="tag">cinema</span>
+                        <span class="tag">domenica</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="event">
+                <div class="event-content">
+                    <div class="event-date">Ottobre 2012</div>
+                    <div class="event-title">🎲 Expopolis - Il Gioco</div>
+                    <div class="event-description">
+                        Un gioco da tavolo per raccontare criticamente la Milano di Expo. Linguaggio ludico per smontare la retorica del grande evento.
+                    </div>
+                    <div class="event-tags">
+                        <span class="tag">noexpo</span>
+                        <span class="tag">artivismo</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2013 -->
+            <div class="year-marker">
+                <h2>2013</h2>
+            </div>
+
+            <div class="event">
+                <div class="event-content">
+                    <div class="event-date">2 Marzo 2013</div>
+                    <div class="event-title">🎂 1° Compleanno di Piano Terra</div>
+                    <div class="event-description">
+                        Un anno di attività, assemblee, concerti, proiezioni. Lo spazio si consolida come punto di riferimento del quartiere.
+                    </div>
+                    <div class="event-tags">
+                        <span class="tag">festa</span>
+                        <span class="tag">comunità</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="event">
+                <div class="event-content">
+                    <div class="event-date">2013</div>
+                    <div class="event-title">🚿 Lotta NoCanal</div>
+                    <div class="event-description">
+                        Inizia la battaglia contro la "via d'acqua" di Expo. Spaventaruspe, blocchi ai cantieri, vittoria al fianco dei comitati dei parchi.
+                    </div>
+                    <div class="event-tags">
+                        <span class="tag">nocanal</span>
+                        <span class="tag">territorio</span>
+                        <span class="tag">vittoria</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="event">
+                <div class="event-content">
+                    <div class="event-date">2013</div>
+                    <div class="event-title">🥕 GAS Maltrainsema al PT</div>
+                    <div class="event-description">
+                        Il Gruppo di Acquisto Solidale del quartiere trova casa. "Facciamoci di gas!" - economia solidale, produttori locali, consumo critico.
+                    </div>
+                    <div class="event-tags">
+                        <span class="tag">gas</span>
+                        <span class="tag">economia solidale</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2014 -->
+            <div class="year-marker">
+                <h2>2014</h2>
+            </div>
+
+            <div class="event">
+                <div class="event-content">
+                    <div class="event-date">Maggio 2014</div>
+                    <div class="event-title">📅 NoExpo Days (NED)</div>
+                    <div class="event-description">
+                        Un mese di iniziative alla ricerca della convergenza. Cresce l'"Attitudine NoExpo" verso il grande appuntamento del 2015.
+                    </div>
+                    <div class="event-tags">
+                        <span class="tag">noexpo</span>
+                        <span class="tag">mobilitazione</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="event">
+                <div class="event-content">
+                    <div class="event-date">12 Dicembre 2014</div>
+                    <div class="event-title">🚧 Ingresso nel cantiere Expo</div>
+                    <div class="event-description">
+                        60 attivisti entrano nel cantiere-fortino di Expo denunciando le nocività dell'operazione. Segue assemblea nazionale di 200 persone.
+                    </div>
+                    <div class="event-tags">
+                        <span class="tag">azione diretta</span>
+                        <span class="tag">noexpo</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2015 -->
+            <div class="year-marker">
+                <h2>2015</h2>
+            </div>
+
+            <div class="event">
+                <div class="event-content">
+                    <div class="event-date">1 Maggio 2015</div>
+                    <div class="event-title">✊ 80.000 IN PIAZZA</div>
+                    <div class="event-description">
+                        Il più grande corteo NoExpo. Reddito, diritti, territorio. Una giornata storica per i movimenti milanesi.
+                    </div>
+                    <div class="event-tags">
+                        <span class="tag">mayday</span>
+                        <span class="tag">storico</span>
+                        <span class="tag">noexpo</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="event">
+                <div class="event-content">
+                    <div class="event-date">2015</div>
+                    <div class="event-title">📰 Nasce Pieghevole</div>
+                    <div class="event-description">
+                        La zine autoprodotta di Off Topic. Numeri su diritto alla città, eventi, cibo, clima, abitare. Strumento di controinformazione.
+                    </div>
+                    <div class="event-tags">
+                        <span class="tag">zine</span>
+                        <span class="tag">autoproduzione</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2020 -->
+            <div class="year-marker">
+                <h2>2020-2023</h2>
+            </div>
+
+            <div class="event">
+                <div class="event-content">
+                    <div class="event-date">2020-2021</div>
+                    <div class="event-title">😷 Pandemia e reinvenzione</div>
+                    <div class="event-description">
+                        Lockdown, distanziamento, ma lo spazio non si ferma. NLD - Non Lasciamoci Disassembrare. Nuove forme di socialità e mutualismo.
+                    </div>
+                    <div class="event-tags">
+                        <span class="tag">covid</span>
+                        <span class="tag">resilienza</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2024-2025 -->
+            <div class="year-marker">
+                <h2>2024-2025</h2>
+            </div>
+
+            <div class="event">
+                <div class="event-content">
+                    <div class="event-date">2024-2025</div>
+                    <div class="event-title">🏔️ NoOlimpiadi Milano-Cortina</div>
+                    <div class="event-description">
+                        La storia si ripete? Dieci anni dopo Expo, la critica ai grandi eventi continua. Verso febbraio 2026 con le giornate di contestazione.
+                    </div>
+                    <div class="event-tags">
+                        <span class="tag">noolimpiadi</span>
+                        <span class="tag">territorio</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="event">
+                <div class="event-content">
+                    <div class="event-date">2024-2025</div>
+                    <div class="event-title">🍉 Solidarietà Palestina</div>
+                    <div class="event-description">
+                        Serate, iniziative, cortei. Piano Terra per la Palestina. Jin Jiyan Azadi. Internazionalismo dal basso.
+                    </div>
+                    <div class="event-tags">
+                        <span class="tag">palestina</span>
+                        <span class="tag">solidarietà</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="groups-preview">
+            <h2>I Gruppi del PT</h2>
+            <div class="groups-grid">
+                <div class="group-card">
+                    <div class="group-name">🌸 Ambrosia</div>
+                    <div class="group-focus">Questioni di genere, femminismo, queer</div>
+                    <div class="group-when">1° e 3° lunedì</div>
+                </div>
+                <div class="group-card">
+                    <div class="group-name">🏔️ APE Milano</div>
+                    <div class="group-focus">Escursionismo proletario</div>
+                    <div class="group-when">4° lunedì</div>
+                </div>
+                <div class="group-card">
+                    <div class="group-name">💻 A-K-M-E</div>
+                    <div class="group-focus">Hacktivism, tecnologie</div>
+                    <div class="group-when">2 volte al mese</div>
+                </div>
+                <div class="group-card">
+                    <div class="group-name">📊 Off Topic Lab</div>
+                    <div class="group-focus">Inchiesta urbana, critica metropoli</div>
+                    <div class="group-when">Martedì h20</div>
+                </div>
+                <div class="group-card">
+                    <div class="group-name">🔴 Rete Jin</div>
+                    <div class="group-focus">Solidarietà donne curde</div>
+                    <div class="group-when">Martedì h19</div>
+                </div>
+                <div class="group-card">
+                    <div class="group-name">🥕 Maltrainsema</div>
+                    <div class="group-focus">Gruppo Acquisto Solidale</div>
+                    <div class="group-when">2° e 4° lunedì</div>
+                </div>
+                <div class="group-card">
+                    <div class="group-name">🏥 Su.Sa.Mi</div>
+                    <div class="group-focus">Difesa diritto alla cura e gratuità sanità pubblica</div>
+                    <div class="group-when">Sportello attivo</div>
+                </div>
+                <div class="group-card">
+                    <div class="group-name">🎬 Cinesenzaforum</div>
+                    <div class="group-focus">Proiezioni cinematografiche</div>
+                    <div class="group-when">Domenica h21</div>
+                </div>
+                <div class="group-card">
+                    <div class="group-name">🚴 Deliverance</div>
+                    <div class="group-focus">Diritti riders</div>
+                    <div class="group-when">—</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-slogan">"Un'isola sottosopra"</div>
+        <div class="footer-links">
+            <a href="#">📧 <span class="__cf_email__" data-cfemail="88f8e1e9e6e7fcedfafae9c8e1e6feede6fce9fce1a6e7faef">[email&#160;protected]</span></a>
+            <a href="#">📱 Telegram</a>
+            <a href="#">🐘 Mastodon</a>
+        </div>
+        <div class="puntello-badge">📅 Ci trovi anche su Puntello.org</div>
+        <p style="margin-top: 2rem; opacity: 0.5; font-size: 0.75rem;">
+            Via Federico Confalonieri 3, Milano - Quartiere Isola<br>
+            MM2 Garibaldi/Gioia | MM5 Isola
+        </p>
+    </footer>
+
+    <script>
+        // Simple scroll animation for timeline events
+        const events = document.querySelectorAll('.event');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        events.forEach((event, index) => {
+            event.style.opacity = '0';
+            event.style.transform = 'translateY(30px)';
+            event.style.transition = 'all 0.6s ease-out';
+            observer.observe(event);
+            
+            // Breathing delay - sfalsato per ogni evento
+            const content = event.querySelector('.event-content');
+            if (content) {
+                const delay = (index * 0.3) % 3; // delay ciclico 0-3s
+                content.style.setProperty('--delay', delay + 's');
+            }
+        });
+
+        // Glitch effect on logo click
+        document.querySelector('.logo').addEvent
