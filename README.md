@@ -3,3 +3,6 @@ Il Wall SpaceTime è un'interfaccia che trasforma la navigazione in **esplorazio
 
 https://yuricrea.github.io/wall-pt/wall_spacetime_v5.html
 https://yuricrea.github.io/wall-pt/timeline_v2.html
+
+
+https://yuricrea.github.io/wall-pt/PROPOSTA_COMPLETA_PT.md
