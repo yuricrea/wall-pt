@@ -87,6 +87,10 @@ Traduzione digitale del muro fisico dello spazio — ricoperto di sticker, locan
 **Mockup funzionante:**
 https://yuricrea.github.io/wall-pt/wall_spacetime_v5.html
 
+NB: sono stati caricati circa 30 eventi+locandine+collettive su 1100. 
+il Wall spacetime è molto più stratificato e denso di ciò che vedi, 
+pensa stratificato, cospira nel tempo, respira nello spazio, ispira il presente.
+
 ---
 
 ### 2. WALL COLLETTIVE — Il Respiro del Presente
