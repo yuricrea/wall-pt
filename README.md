@@ -9,6 +9,6 @@ ____________materiali concept manifesto______________________________
 ** https://yuricrea.github.io/wall-pt/timeline_v2.html
 
 
-** https://yuricrea.github.io/wall-pt/PROPOSTA_COMPLETA_PT.md
+** https://yuricrea.github.io/wall-pt/doc4monkeysnerds.md
 
-** https://yuricrea.github.io/wall-pt/WALL_SPACETIME_DIGEST.md
+** https://yuricrea.github.io/wall-pt/doc4donkeydummies.md
