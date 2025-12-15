@@ -1,8 +1,9 @@
-# PROPOSTA COMPLETA PIANO TERRA
-## Wall SpaceTime + Wall Collettive + Automazione Social
+# PROPOSTA Completa PIANO TERRA ::: doc. 4 monkeysnerds
+## Home page - Wall SpaceTime + Wall Collettive (feeds wall autoaggiornato) + 
++ Wall of Fames timeline lineare (interctive?) 
++ Automazione Social + 
 
 *Documento programmatico - Dicembre 2025*
-
 ---
 
 ## ANTEFATTO
