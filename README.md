@@ -12,3 +12,18 @@ ____________materiali concept manifesto______________________________
 ** https://yuricrea.github.io/wall-pt/doc4monkeysnerds.md
 
 ** https://yuricrea.github.io/wall-pt/doc4donkeydummies.md
+
+#archivio grafiche
+https://yuricrea.github.io/wall-pt/archivio/LANDING_00-sideSX.jpg
+https://yuricrea.github.io/wall-pt/archivio/LANDING_00.jpg
+https://yuricrea.github.io/wall-pt/archivio/LANDING_01-sideSX.jpg
+https://yuricrea.github.io/wall-pt/archivio/LANDING_01.jpg
+https://yuricrea.github.io/wall-pt/archivio/LANDING_02-sideSX.jpg
+https://yuricrea.github.io/wall-pt/archivio/LANDING_02.jpg
+https://yuricrea.github.io/wall-pt/archivio/LANDING_03-sideSX.jpg
+https://yuricrea.github.io/wall-pt/archivio/LANDING_03.jpg
+https://yuricrea.github.io/wall-pt/archivio/LANDING_04-sideSX.jpg
+https://yuricrea.github.io/wall-pt/archivio/LANDING_04.jpg
+https://yuricrea.github.io/wall-pt/archivio/LANDING_05-sideSX.jpg
+https://yuricrea.github.io/wall-pt/archivio/LANDING_05.jpg
+
