@@ -1,0 +1,2572 @@
+<!DOCTYPE html>
+<!--
+╔═══════════════════════════════════════════════════════════════════════╗
+║  HOMEPAGE PIANO TERRA - Release 1.0                                   ║
+║  Fanzine Aesthetic - Archeologia Stratificata del Presente            ║
+╠═══════════════════════════════════════════════════════════════════════╣
+║  MAJOR RELEASE v1.0 (16 Dicembre 2025 - 22:15):                      ║
+║                                                                        ║
+║  🎯 HERO SLIDER SYSTEM COMPLETO:                                      ║
+║  ✓ 6 hero totali: Hero 00 (testi) + 5 immagini background            ║
+║  ✓ Hero 00: logo PIANOTERRA + tagline + pulsanti (NO bg image)       ║
+║  ✓ Hero 01-05: SOLO immagini background (NO testi sovrapposti)       ║
+║  ✓ Rotazione automatica: 5 secondi                                    ║
+║  ✓ Transizione: fade smooth                                           ║
+║  ✓ Pause automatica su hover hero                                     ║
+║  ✓ Controlli: 6 pallini + frecce ← →                                 ║
+║  ✓ Keyboard navigation: ← → arrows                                    ║
+║  ✓ Freccia scroll down ↓ (smooth scroll to chi-siamo)                ║
+║  ✓ Height: 100vh max 800px desktop, no limit mobile                   ║
+║  ✓ Dimming fisso: 0.3 opacity                                         ║
+║                                                                        ║
+║  🎨 SIDEBAR NAVIGATION:                                               ║
+║  ✓ Hamburger menu ☰ in header (alto SX)                              ║
+║  ✓ Sidebar slide-in 0.3s da sinistra                                  ║
+║  ✓ Dark overlay quando aperta                                         ║
+║  ✓ 3 box preview: Wall SpaceTime, Wall Collettive, Wall of Fame      ║
+║  ✓ Box 1-3: links diretti alle pagine wall                            ║
+║  ✓ Box 2: anchor smooth scroll a sezione collettive                   ║
+║  ✓ Animazione hamburger → X quando aperta                             ║
+║                                                                        ║
+║  Hero images usate:                                                    ║
+║  • pthero_00.jpg - Scarrafone "Quite a Village"                      ║
+║  • pthero_03.jpg - Milano Horror Stories                              ║
+║  • pthero_04.jpg - A-K-M-E Cyberpunk                                  ║
+║  • pthero_06.jpg - 8 Marzo NUDM                                       ║
+║  • pthero_08.jpg - Megafono colorato                                  ║
+║                                                                        ║
+║  Filosofia v1.0: "Un mockup, un codice, una release pulita"          ║
+║                  — Grande Capo Estikazzi 🪳                           ║
+╚═══════════════════════════════════════════════════════════════════════╝
+-->
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piano Terra - Spazio Occupato Autogestito dal 2012</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Archivo+Black&family=Quicksand:wght@400;700&family=Special+Elite&family=Courier+Prime:wght@400;700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ============================================
+           CSS VARIABLES - THEME SYSTEM
+        ============================================ */
+        :root {
+            /* Transfemminista (default) */
+            --primary: #ff6b9d;
+            --secondary: #d8b5d8;
+            --accent: #64dfdf;
+            --bg: #f5f0e8;
+            --text: #1a1a1a;
+            --bg-alt: #fff;
+            --shadow: rgba(0,0,0,0.1);
+            --font-main: 'Quicksand', sans-serif;
+            --font-title: 'Archivo Black', sans-serif;
+            --font-handwritten: 'Courier Prime', monospace;
+            
+            /* Pattern */
+            --pattern-opacity: 0.05;
+            --noise-opacity: 0.06;
+        }
+
+        /* Smooth transitions for theme switching */
+        * {
+            transition: background-color 0.5s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        *:not(.no-transition) {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg);
+            /* Pattern texture visibile */
+            background-image: 
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 10px,
+                    rgba(0,0,0,0.04) 10px,
+                    rgba(0,0,0,0.04) 20px
+                );
+            color: var(--text);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Noise texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.05"/></svg>');
+            opacity: var(--noise-opacity);
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* ============================================
+           THEME SWITCHER - FLOATING UI (SINISTRA)
+        ============================================ */
+        .theme-switcher {
+            position: fixed;
+            top: 90px;
+            left: 20px;
+            z-index: 2000;
+        }
+
+        .palette-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--bg-alt);
+            border: 3px solid var(--primary);
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .palette-toggle:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 6px 25px var(--shadow);
+        }
+
+        .palette-selector {
+            position: absolute;
+            top: 75px;
+            left: 0;
+            background: var(--bg-alt);
+            color: var(--text-alt);
+            border: 3px solid var(--primary);
+            border-radius: 15px;
+            padding: 1rem;
+            display: none;
+            flex-direction: column;
+            gap: 0.8rem;
+            box-shadow: 0 8px 30px var(--shadow);
+            min-width: 200px;
+        }
+
+        .palette-selector.open {
+            display: flex;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .theme-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.7rem;
+            background: #ffffff;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #000000;
+            transition: all 0.2s;
+            font-family: var(--font-main);
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .theme-btn:hover {
+            transform: translateX(5px);
+            border-color: var(--primary);
+        }
+
+        .theme-btn.active {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: var(--text-on-primary);
+        }
+
+        .color-preview {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        /* ============================================
+           HEADER - MINIMAL FANZINE STYLE
+        ============================================ */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: var(--bg-alt);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 2rem;
+            border-bottom: 4px solid var(--primary);
+            box-shadow: 0 2px 10px var(--shadow);
+        }
+
+        .header-left {
+            position: absolute;
+            left: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Hamburger menu button */
+        .hamburger {
+            width: 30px;
+            height: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+            z-index: 2001;
+            transition: all 0.3s;
+        }
+
+        .hamburger span {
+            width: 100%;
+            height: 3px;
+            background: var(--text-alt);
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        .hamburger:hover span {
+            background: var(--primary);
+        }
+
+        /* Hamburger animation quando sidebar aperta */
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translateY(10px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translateY(-10px);
+        }
+
+        .logo-img {
+            height: 50px;
+            width: auto;
+            animation: breathe 4s ease-in-out infinite;
+            filter: drop-shadow(2px 2px 4px var(--shadow));
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .logo-text {
+            font-family: var(--font-title);
+            font-size: 1.5rem;
+            transform: rotate(-2deg);
+            color: var(--text-alt);
+        }
+
+        .logo-text span {
+            color: var(--primary);
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-alt);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-left: 3rem;
+        }
+
+        .header-right a {
+            font-size: 1.5rem;
+            transition: transform 0.2s;
+        }
+
+        .header-right a:hover {
+            transform: scale(1.3) rotate(15deg);
+        }
+
+        /* ============================================
+           SIDEBAR - Wall Preview Navigation
+        ============================================ */
+        
+        .sidebar {
+            position: fixed;
+            top: 80px; /* Sotto header */
+            left: -300px; /* Nascosta inizialmente */
+            width: 300px;
+            height: calc(100vh - 80px);
+            background: var(--bg-alt);
+            backdrop-filter: blur(10px);
+            border-right: 4px solid var(--primary);
+            box-shadow: 4px 0 20px var(--shadow);
+            z-index: 999;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        /* Dark overlay quando sidebar aperta */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 998;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Box preview wall */
+        .sidebar-box {
+            background: var(--secondary);
+            border: 3px solid var(--primary);
+            border-radius: 8px;
+            padding: 1.5rem 1rem;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: block;
+            color: var(--text-on-secondary);
+        }
+
+        .sidebar-box:hover {
+            transform: translateX(10px) rotate(1deg);
+            box-shadow: 5px 5px 0 var(--accent);
+        }
+
+        .sidebar-box-title {
+            font-family: var(--font-title);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        .sidebar-box-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0.5rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-box-icon img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .sidebar-box-arrow {
+            text-align: right;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        /* Wall of Fame thumbnails in sidebar */
+        .sidebar-thumbnails {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+        }
+
+        .sidebar-thumbnails img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            filter: grayscale(30%);
+            transition: all 0.2s;
+        }
+
+        .sidebar-thumbnails img:hover {
+            filter: grayscale(0%);
+            transform: scale(1.1);
+        }
+
+        /* Free Palestine ribbon */
+        .free-palestine {
+            position: fixed;
+            top: 0;
+            right: 0;
+            z-index: 1001;
+            width: 120px;
+            height: 120px;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .free-palestine a {
+            pointer-events: auto;
+            position: absolute;
+            width: 180px;
+            padding: 8px 0;
+            background: var(--accent);
+            color: var(--text-on-accent);
+            text-align: center;
+            font-size: 11px;
+            font-weight: bold;
+            text-decoration: none;
+            text-transform: uppercase;
+            transform: rotate(45deg);
+            top: 28px;
+            right: -50px;
+            box-shadow: 0 2px 10px var(--shadow);
+        }
+
+        .free-palestine a:hover {
+            background: var(--primary);
+            color: var(--text-on-primary);
+        }
+
+        /* ============================================
+           HERO - COLLAGE STRATIFICATO ANIMATO
+        ============================================ */
+        .hero {
+            position: relative;
+            height: 100vh;
+            max-height: 800px; /* Limite su desktop */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-top: 80px;
+            background-color: var(--bg);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: background-image 1.5s ease-in-out;
+        }
+
+        /* Mobile/tablet: rimuovi limite max-height */
+        @media (max-height: 800px) {
+            .hero {
+                max-height: none;
+            }
+        }
+
+        /* Dimming overlay fisso 0.3 */
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 900px;
+            padding: 2rem;
+        }
+
+        /* Collage elements */
+        .hero-logo {
+            width: 120px;
+            height: auto;
+            position: absolute;
+            top: -60px;
+            left: -80px;
+            transform: rotate(-5deg);
+            animation: breathe 4s ease-in-out infinite;
+            filter: drop-shadow(4px 4px 8px var(--shadow));
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-100px) rotate(-15deg); }
+            to { opacity: 1; transform: translateX(0) rotate(-5deg); }
+        }
+
+        /* Scotch tape decorativo REALISTICO */
+        .scotch-tape {
+            position: absolute;
+            width: 120px;
+            height: 35px;
+            background: rgba(255, 248, 220, 0.4);
+            border: 1px solid rgba(210, 180, 140, 0.3);
+            box-shadow: 
+                0 1px 3px rgba(0,0,0,0.1),
+                inset 0 0 20px rgba(255,255,255,0.2),
+                inset 0 0 10px rgba(210,180,140,0.1);
+            clip-path: polygon(
+                0% 8%, 2% 0%, 98% 2%, 100% 10%,
+                100% 92%, 97% 100%, 3% 98%, 0% 90%
+            );
+            backdrop-filter: blur(1px);
+        }
+
+        .scotch-tape::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="2" numOctaves="3"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.15"/></svg>');
+            opacity: 0.3;
+            mix-blend-mode: multiply;
+        }
+
+        .scotch-tape::after {
+            content: '';
+            position: absolute;
+            top: 40%;
+            left: 10%;
+            width: 20%;
+            height: 15%;
+            background: rgba(210,180,140,0.15);
+            border-radius: 50%;
+            filter: blur(3px);
+        }
+
+        .scotch-tape-1 {
+            top: -20px;
+            left: 50px;
+            transform: rotate(-8deg);
+            /* animation: fadeIn - REMOVED instant */
+        }
+
+        .scotch-tape-2 {
+            top: 50%;
+            right: -50px;
+            transform: rotate(12deg);
+            /* animation: fadeIn - REMOVED instant */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .hero h1 {
+            font-family: var(--font-title);
+            font-size: clamp(3rem, 12vw, 7rem);
+            line-height: 0.9;
+            margin-bottom: 1rem;
+            transform: rotate(-1deg);
+            text-shadow: 4px 4px 0 var(--primary);
+            animation: breathe 5s ease-in-out infinite;
+        }
+
+        @keyframes scaleUp {
+            from { opacity: 0; transform: scale(0.8) rotate(-5deg); }
+            to { opacity: 1; transform: scale(1) rotate(-1deg); }
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+        }
+
+        .hero-tagline {
+            font-family: var(--font-handwritten);
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            line-height: 1.6;
+            margin: 2rem 0;
+            transform: rotate(1deg);
+            /* animation: fadeInUp - REMOVED instant */
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px) rotate(0); }
+            to { opacity: 1; transform: translateY(0) rotate(1deg); }
+        }
+
+        .hero-sticker {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--primary);
+            color: var(--text-on-primary);
+            font-family: var(--font-title);
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            transform: rotate(-3deg);
+            box-shadow: 4px 4px 0 var(--text);
+            margin-top: 2rem;
+            animation: breathe 3s ease-in-out infinite;
+            position: relative;
+        }
+
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: translateY(100px) rotate(-10deg); }
+            60% { transform: translateY(-10px) rotate(-3deg); }
+            100% { opacity: 1; transform: translateY(0) rotate(-3deg); }
+        }
+
+        .hero-cta {
+            display: inline-block;
+            margin-top: 3rem;
+            padding: 1.2rem 2.5rem;
+            background: var(--accent);
+            color: var(--text-on-accent);
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: 3px solid var(--text);
+            box-shadow: 5px 5px 0 var(--text);
+            transform: rotate(2deg);
+            transition: all 0.3s;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .hero-cta:hover {
+            transform: rotate(-2deg) translateY(-3px);
+            box-shadow: 8px 8px 0 var(--text);
+        }
+
+        /* ============================================
+           HERO CONTROLS - Frecce + Pallini Minimal
+        ============================================ */
+        
+        .hero-controls {
+            position: fixed !important;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 4rem; /* ALLUNGATO orizzontalmente */
+            width: fit-content;
+            max-width: 90vw;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+        
+        .hero-controls.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        /* Frecce navigazione - DIMENSIONI ORIGINALI */
+        .hero-arrow {
+            background: none;
+            border: none;
+            color: var(--bianco);
+            font-family: 'Space Mono', monospace;
+            font-size: 2.5rem; /* Originale era 2rem, leggermente aumentato */
+            cursor: pointer;
+            opacity: 0.5;
+            transition: all 0.3s;
+            padding: 0.5rem;
+            line-height: 1;
+        }
+        
+        .hero-arrow:hover {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+        
+        .hero-arrow:active {
+            transform: scale(0.9);
+        }
+        
+        /* Pallini indicatori - DIMENSIONI ORIGINALI */
+        .hero-dots {
+            display: flex;
+            gap: 1rem; /* Più distanziati */
+        }
+        
+        .hero-dot {
+            width: 14px; /* Leggermente più grande: 10 → 14px */
+            height: 14px;
+            border-radius: 50%;
+            background: var(--bianco);
+            opacity: 0.3;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            padding: 0;
+        }
+        
+        .hero-dot:hover {
+            opacity: 0.7;
+            transform: scale(1.3);
+        }
+        
+        .hero-dot.active {
+            opacity: 1;
+            background: var(--primary);
+            transform: scale(1.2);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: rotate(2deg) scale(1); }
+            50% { transform: rotate(2deg) scale(1.05); }
+        }
+
+        /* Freccia scroll down */
+        .scroll-arrow {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            font-size: 3rem;
+            color: var(--bianco);
+            opacity: 0.6;
+            cursor: pointer;
+            animation: bounce 2s infinite;
+            transition: all 0.3s;
+        }
+
+        .scroll-arrow:hover {
+            opacity: 1;
+            transform: translateX(-50%) scale(1.2);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* ============================================
+           CHI SIAMO - FANZINE SECTION
+        ============================================ */
+        .chi-siamo {
+            padding: 6rem 2rem;
+            background: var(--secondary);
+            color: var(--text-on-secondary);
+            position: relative;
+            clip-path: polygon(
+                0% 2%, 2% 0%, 98% 0%, 100% 2%,
+                100% 98%, 98% 100%, 2% 100%, 0% 98%
+            );
+            margin: 4rem 0;
+        }
+
+        .chi-siamo::before,
+        .chi-siamo::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 30px;
+            background: rgba(255,255,255,0.3);
+            box-shadow: 0 2px 5px var(--shadow);
+        }
+
+        .chi-siamo::before {
+            top: 20px;
+            left: 15%;
+            transform: rotate(-5deg);
+        }
+
+        .chi-siamo::after {
+            top: 20px;
+            right: 15%;
+            transform: rotate(5deg);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .chi-siamo h2 {
+            font-family: var(--font-title);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            transform: rotate(-1deg);
+            text-shadow: 3px 3px 0 var(--text);
+        }
+
+        .chi-siamo p {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            font-family: var(--font-handwritten);
+        }
+
+        .valori {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+        }
+
+        .valori span {
+            background: var(--accent);
+            color: var(--text-on-accent);
+            padding: 0.7rem 1.5rem;
+            border: 2px solid var(--text);
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 3px 3px 0 var(--text);
+            transition: all 0.2s;
+        }
+
+        .valori span:hover {
+            transform: translateY(-3px);
+            box-shadow: 5px 5px 0 var(--text);
+        }
+
+        /* ============================================
+           ARCHEOLOGIE DEL PRESENTE - DOPPIA PAGINA
+        ============================================ */
+        .archeologie {
+            padding: 6rem 2rem;
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .archeologie h2 {
+            font-family: var(--font-title);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            text-align: center;
+            margin-bottom: 4rem;
+            color: #000000;
+            transform: rotate(-1deg);
+        }
+
+        .muri-doppia-pagina {
+            display: grid;
+            grid-template-columns: 1fr 3px 1fr;
+            gap: 0;
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        /* Rilegatura centrale */
+        .rilegatura {
+            background: linear-gradient(
+                to right,
+                #d62828 0%,
+                rgba(0,0,0,0.3) 50%,
+                #d62828 100%
+            );
+            position: relative;
+        }
+
+        .rilegatura::before,
+        .rilegatura::after {
+            content: '';
+            position: absolute;
+            width: 3px;
+            height: 20%;
+            background: #d62828;
+            left: 0;
+        }
+
+        .rilegatura::before { top: 20%; }
+        .rilegatura::after { bottom: 20%; }
+
+        .muro-page {
+            padding: 2rem;
+            position: relative;
+        }
+
+        .muro-page::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 80px;
+            height: 25px;
+            background: rgba(255,255,255,0.3);
+            transform: rotate(45deg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+
+        .muro-page h3 {
+            font-family: var(--font-title);
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            margin-bottom: 1rem;
+            color: #000000;
+            transform: rotate(-1deg);
+        }
+
+        .muro-page .subtitle {
+            font-family: var(--font-handwritten);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+            color: #000000;
+        }
+
+        .muro-page p {
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            color: #000000;
+        }
+
+        .muro-preview {
+            background: #ffffff;
+            border: 3px dashed #d62828;
+            color: #000000;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 2rem;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .muro-preview img {
+            max-width: 100px;
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        .muro-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .muro-btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: var(--primary);
+            color: var(--text-on-primary);
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 2px solid var(--text);
+            box-shadow: 3px 3px 0 var(--text);
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .muro-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 5px 5px 0 var(--text);
+        }
+
+        .muro-btn.secondary {
+            background: var(--accent);
+            color: var(--text-on-accent);
+        }
+
+        .muro-btn.tertiary {
+            background: #f5f5f5;
+            color: #000000;
+            border: 2px solid #000000;
+        }
+
+        /* ============================================
+           EVENTI - POLAROID INCOLLATE
+        ============================================ */
+        .eventi {
+            padding: 6rem 2rem;
+            background: var(--primary);
+            color: var(--text-on-primary);
+        }
+
+        .eventi h2 {
+            font-family: var(--font-title);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            text-align: center;
+            margin-bottom: 4rem;
+            transform: rotate(1deg);
+        }
+
+        .eventi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .evento-polaroid {
+            background: var(--bg-alt);
+            padding: 1.5rem;
+            padding-bottom: 3rem;
+            box-shadow: 0 10px 30px var(--shadow);
+            transform: rotate(var(--rotation));
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .evento-polaroid:nth-child(1) { --rotation: -3deg; }
+        .evento-polaroid:nth-child(2) { --rotation: 2deg; }
+        .evento-polaroid:nth-child(3) { --rotation: -2deg; }
+
+        .evento-polaroid::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 25px;
+            background: rgba(255,255,255,0.6);
+            box-shadow: 0 2px 5px var(--shadow);
+        }
+
+        .evento-polaroid:hover {
+            transform: rotate(0deg) scale(1.05);
+            z-index: 10;
+        }
+
+        .evento-polaroid img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            margin-bottom: 1rem;
+        }
+
+        .evento-polaroid .data {
+            font-family: var(--font-title);
+            font-size: 0.8rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .evento-polaroid .titolo {
+            font-family: var(--font-title);
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .evento-polaroid .descrizione {
+            font-family: var(--font-handwritten);
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        /* ============================================
+           COLLETTIVE - GRID 4x4 COLORATA
+        ============================================ */
+        .collettive {
+            padding: 6rem 2rem;
+            background: var(--bg);
+        }
+
+        .collettive h2 {
+            font-family: var(--font-title);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            text-align: center;
+            margin-bottom: 4rem;
+            color: var(--text);
+            transform: rotate(-1deg);
+            text-shadow: 3px 3px 0 var(--accent);
+        }
+
+        .collettive-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .collettiva-box {
+            aspect-ratio: 1;
+            background: var(--bg-alt);
+            border: 3px solid var(--text);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 4px 4px 0 var(--text);
+            position: relative;
+            clip-path: polygon(
+                0% 5%, 5% 0%, 95% 0%, 100% 5%,
+                100% 95%, 95% 100%, 5% 100%, 0% 95%
+            );
+        }
+
+        .collettiva-box:nth-child(odd) {
+            background: var(--secondary);
+        }
+
+        .collettiva-box:nth-child(4n) {
+            background: var(--primary);
+        }
+
+        .collettiva-box:nth-child(3n) {
+            background: var(--accent);
+        }
+
+        .collettiva-box:hover {
+            transform: scale(1.1) rotate(var(--hover-rotation));
+            z-index: 10;
+            box-shadow: 8px 8px 0 var(--text);
+        }
+
+        .collettiva-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(2px 2px 4px var(--shadow));
+        }
+
+        /* ============================================
+           FOOTER - MINIMAL KRAFT
+        ============================================ */
+        footer {
+            background: var(--text);
+            color: var(--bg);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 5px solid var(--primary);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            font-family: var(--font-title);
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: var(--bg);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            border-top: 2px solid var(--primary);
+            padding-top: 2rem;
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        /* ============================================
+           WALL OF FAME - CHI CI ISPIRA
+        ============================================ */
+        
+        /* Floating stickers discreti */
+        .wallfame-float {
+            position: absolute;
+            width: 135px;
+            height: auto;
+            opacity: 0.4;
+            z-index: 5;
+            pointer-events: all;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            filter: grayscale(70%);
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        .wallfame-float:hover {
+            opacity: 1;
+            transform: scale(1.3) rotate(0deg) !important;
+            filter: grayscale(0%);
+            z-index: 500;
+        }
+
+        .wallfame-float .tooltip {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: var(--text-on-accent);
+            padding: 0.4rem 0.8rem;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            border-radius: 4px;
+            box-shadow: 0 4px 10px var(--shadow);
+        }
+
+        .wallfame-float:hover .tooltip {
+            opacity: 1;
+        }
+
+        /* Sezione dedicata */
+        .wallfame-section {
+            padding: 4rem 2rem;
+            background: #ffffff;
+            color: #000000;
+            border-top: 5px solid var(--primary);
+            border-bottom: 5px solid var(--secondary);
+            position: relative;
+        }
+
+        .wallfame-section h2 {
+            text-align: center;
+            font-family: var(--font-title);
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .wallfame-section .subtitle {
+            text-align: center;
+            font-style: italic;
+            color: #000000;
+            opacity: 0.7;
+            margin-bottom: 3rem;
+        }
+
+        .wallfame-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(156px, 1fr));
+            gap: 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .wallfame-card {
+            position: relative;
+            aspect-ratio: 1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            filter: grayscale(50%);
+        }
+
+        .wallfame-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transform: rotate(var(--card-rotation, 0deg));
+            transition: all 0.3s ease;
+        }
+
+        .wallfame-card:hover {
+            transform: scale(1.15);
+            filter: grayscale(0%);
+            z-index: 100;
+        }
+
+        .wallfame-card:hover img {
+            transform: rotate(0deg) !important;
+        }
+
+        .wallfame-card .tooltip {
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: var(--text-on-primary);
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            border-radius: 4px;
+            box-shadow: 0 4px 10px var(--shadow);
+            z-index: 1000;
+            transition: opacity 0.2s;
+        }
+
+        .wallfame-card:hover .tooltip {
+            opacity: 1;
+        }
+
+        /* Box info dinamico */
+        .wallfame-info-box {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: #ffffff;
+            color: #000000;
+            border: 3px solid var(--primary);
+            border-radius: 10px;
+            min-height: 120px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .wallfame-info-box h3 {
+            font-family: var(--font-title);
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .wallfame-info-box p {
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .wallfame-info-box .bio {
+            display: none;
+        }
+
+        .wallfame-info-box .bio.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Easter eggs */
+        .wallfame-easter {
+            position: fixed;
+            width: 100px;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 999;
+            transition: all 0.5s ease;
+        }
+
+        .wallfame-easter.found {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Gamification counter */
+        .wallfame-counter {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            background: var(--primary);
+            color: var(--text-on-primary);
+            padding: 0.8rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 4px 15px var(--shadow);
+            z-index: 800;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .wallfame-counter.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ============================================
+           RESPONSIVE WALL OF FAME
+        ============================================ */
+        @media (max-width: 1024px) {
+            .muri-doppia-pagina {
+                grid-template-columns: 1fr;
+                padding: 2rem;
+            }
+
+            .rilegatura {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 0 1rem;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .header-right {
+                display: none;
+            }
+
+            .theme-switcher {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .hero-logo {
+                width: 80px;
+                top: -40px;
+                left: -40px;
+            }
+
+            .collettive-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- FREE PALESTINE RIBBON -->
+    <div class="free-palestine">
+        <a href="https://bdsmovement.net/" target="_blank">Free Palestine 🍉</a>
+    </div>
+
+    <!-- THEME SWITCHER -->
+    <div class="theme-switcher">
+        <button class="palette-toggle" onclick="togglePalette()">
+            <svg width="38" height="38" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="16" cy="16" r="14" fill="url(#colorGradient)" stroke="currentColor" stroke-width="2"/>
+                <circle cx="10" cy="12" r="4.8" fill="#D92A61"/>
+                <circle cx="16" cy="9" r="4.8" fill="#64dfdf"/>
+                <circle cx="22" cy="12" r="4.8" fill="#d62828"/>
+                <circle cx="11" cy="19" r="4.8" fill="#8fbc8f"/>
+                <circle cx="21" cy="19" r="4.8" fill="#f4a261"/>
+                <defs>
+                    <radialGradient id="colorGradient">
+                        <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.15"/>
+                        <stop offset="100%" stop-color="var(--accent)" stop-opacity="0.05"/>
+                    </radialGradient>
+                </defs>
+            </svg>
+        </button>
+        <div class="palette-selector" id="paletteSelector">
+            <button class="theme-btn active" data-theme="transfemminista" onclick="switchTheme('transfemminista')">
+                <span class="color-preview" style="background: linear-gradient(135deg, #D92A61, #EF97C7, #64359B)"></span>
+                <span class="theme-name">Femminismo</span>
+            </button>
+            <button class="theme-btn" data-theme="darkpunk" onclick="switchTheme('darkpunk')">
+                <span class="color-preview" style="background: linear-gradient(135deg, #A67032, #586C77, #3E0B00)"></span>
+                <span class="theme-name">Dark Punk</span>
+            </button>
+            <button class="theme-btn" data-theme="ecologiasociale" onclick="switchTheme('ecologiasociale')">
+                <span class="color-preview" style="background: linear-gradient(135deg, #F49F2A, #8B7550, #8FB15A)"></span>
+                <span class="theme-name">Ecologia Sociale</span>
+            </button>
+            <button class="theme-btn" data-theme="palestina" onclick="switchTheme('palestina')">
+                <span class="color-preview" style="background: linear-gradient(135deg, #CE1127, #027A3E, #000000)"></span>
+                <span class="theme-name">Palestina 🍉</span>
+            </button>
+            <button class="theme-btn" data-theme="urbanactivist" onclick="switchTheme('urbanactivist')">
+                <span class="color-preview" style="background: linear-gradient(135deg, #E2B23E, #B15578, #78A444)"></span>
+                <span class="theme-name">Urban Activist</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-left">
+            <!-- Hamburger menu -->
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <img src="img/logoPT_80.png" alt="Piano Terra" class="logo-img">
+            <div class="logo-text">Piano<span>Terra</span></div>
+        </div>
+        <nav>
+            <a href="#hero">Home</a>
+            <a href="#collettive-section">Collettive</a>
+            <a href="#archeologie">The Walls</a>
+            <a href="https://www.pianoterralab.org/calendario/" target="_blank">Calendario</a>
+            <a href="#chi-siamo">Cos'è PT</a>
+            <a href="#footer">Contatti</a>
+        </nav>
+        <div class="header-right">
+            <a href="https://t.me/pianoterralab" target="_blank" title="Telegram">📱</a>
+            <a href="https://mastodon.uno/@pianoterralab" target="_blank" title="Mastodon">🐘</a>
+            <a href="https://puntello.org/" target="_blank" title="Puntello">📍</a>
+        </div>
+    </header>
+
+    <!-- SIDEBAR - Wall Preview Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <!-- Box 1: Wall SpaceTime -->
+        <a href="wall-spacetime.html" class="sidebar-box">
+            <div class="sidebar-box-title">Archeologie del Presente<br>WALL SPACETIME</div>
+            <div class="sidebar-box-icon">
+                <img src="img/logoPT_80.png" alt="Wall SpaceTime">
+            </div>
+            <div class="sidebar-box-arrow">→</div>
+        </a>
+
+        <!-- Box 2: Wall Collettive (anchor alla sezione) -->
+        <a href="#collettive-section" class="sidebar-box" id="sidebarCollettive">
+            <div class="sidebar-box-title">WALL COLLETTIVE</div>
+            <div class="sidebar-box-icon">
+                <img src="img/logoPT_80.png" alt="Wall Collettive">
+            </div>
+            <div class="sidebar-box-arrow">→</div>
+        </a>
+
+        <!-- Box 3: Wall of Fame -->
+        <a href="wall-of-fame.html" class="sidebar-box">
+            <div class="sidebar-box-title">WALL OF FAME</div>
+            <div class="sidebar-thumbnails">
+                <img src="img/wallfame/karlmarx.png" alt="Marx">
+                <img src="img/wallfame/angeladavis.png" alt="Angela">
+                <img src="img/wallfame/gramsci.png" alt="Gramsci">
+                <img src="img/wallfame/rosaluxemburg.png" alt="Rosa">
+                <img src="img/wallfame/friedakahlo.png" alt="Frida">
+                <img src="img/wallfame/orwell.png" alt="Orwell">
+            </div>
+            <div class="sidebar-box-arrow">→</div>
+        </a>
+    </aside>
+
+    <!-- Dark overlay quando sidebar aperta -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- HERO - COLLAGE ANIMATO -->
+    <!-- Background rotante: 5 hero images, delay 5s start, controlli manuali -->
+    <section id="hero" class="hero">
+        <!-- Wall of Fame floating - Hero -->
+        <img src="img/wallfame/karlmarx.png" alt="Karl Marx" class="wallfame-float" 
+             style="top: 15%; left: 8%; transform: rotate(-4deg); width: 90px;">
+        </img>
+        <img src="img/wallfame/angeladavis.png" alt="Angela Davis" class="wallfame-float" 
+             style="top: 20%; right: 10%; transform: rotate(3deg); width: 85px;">
+        </img>
+        
+        <div class="hero-content">
+            <img src="img/logoPT_80.png" alt="PT" class="hero-logo no-transition">
+            <div class="scotch-tape scotch-tape-1 no-transition"></div>
+            <div class="scotch-tape scotch-tape-2 no-transition"></div>
+            
+            <h1>PIANO<span>TERRA</span></h1>
+            
+            <p class="hero-tagline">
+                13 anni nell'isola dei grattacieli<br>
+                uno spazio liberato che<br>
+                <strong>respira cospira ispira</strong>
+            </p>
+            
+            <div class="hero-sticker no-transition">SPAZIO OCCUPATO<br>AUTOGESTITO</div>
+            
+            <a href="#chi-siamo" class="hero-cta no-transition">SFOGLIA →</a>
+        </div>
+
+        <!-- Freccia scroll down -->
+        <div class="scroll-arrow" onclick="document.getElementById('chi-siamo').scrollIntoView({behavior:'smooth'})">
+            ↓
+        </div>
+    </section>
+
+    <!-- HERO CONTROLS - Frecce + Pallini -->
+    <div class="hero-controls" id="heroControls">
+        <button class="hero-arrow" id="heroPrev" aria-label="Hero precedente">‹</button>
+        <div class="hero-dots" id="heroDots">
+            <!-- Pallini generati via JS -->
+        </div>
+        <button class="hero-arrow" id="heroNext" aria-label="Hero successiva">›</button>
+    </div>
+
+    <!-- CHI SIAMO -->
+    <section id="chi-siamo" class="chi-siamo">
+        <!-- Wall of Fame floating - Chi Siamo -->
+        <img src="img/wallfame/antoniogramsci.png" alt="Antonio Gramsci" class="wallfame-float" 
+             style="top: 25%; left: 5%; transform: rotate(-2deg); width: 75px;">
+        </img>
+        
+        <div class="container">
+            <h2>CHI SIAMO</h2>
+            <p>
+                Piano Terra è uno spazio sociale autogestito nato il 2 marzo 2012 dall'occupazione 
+                di un immobile abbandonato in via Confalonieri 3, quartiere Isola, Milano.
+            </p>
+            <p>
+                Uno spazio contenitore dove transitano e si intersecano 15+ collettive che affrontano 
+                differenti tematiche: diritto alla città, lavoro, femminismo, solidarietà internazionale, 
+                cultura critica, hacktivism, ecologia sociale.
+            </p>
+            <p>
+                Non siamo un locale della movida. Non siamo un bar. Siamo un laboratorio politico, 
+                sociale e culturale dove si costruiscono pratiche di autogestione, mutualismo e resistenza.
+            </p>
+            <div class="valori">
+                <span>ANTIFASCISTA</span>
+                <span>ANTICAPITALISTA</span>
+                <span>FEMMINISTA</span>
+                <span>QUEER-FRIENDLY</span>
+                <span>SOLIDARIETÀ PALESTINA</span>
+                <span>SOLIDARIETÀ KURDISTAN</span>
+                <span>AUTOGESTITO</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ARCHEOLOGIE DEL PRESENTE -->
+    <section id="archeologie" class="archeologie">
+        <!-- Wall of Fame floating - Archeologie -->
+        <img src="img/wallfame/georgeorwell.png" alt="George Orwell" class="wallfame-float" 
+             style="top: 15%; left: 5%; transform: rotate(2deg); width: 75px;">
+        </img>
+        <img src="img/wallfame/frankzappa.png" alt="Frank Zappa" class="wallfame-float" 
+             style="top: 20%; right: 6%; transform: rotate(-3deg); width: 80px;">
+        </img>
+        
+        <h2>ARCHEOLOGIE DEL PRESENTE</h2>
+        
+        <div class="muri-doppia-pagina">
+            <!-- PAGINA SINISTRA: WALL SPACETIME -->
+            <div class="muro-page">
+                <h3>WALL SPACETIME</h3>
+                <p class="subtitle">2012 → Oggi • Il Passato Stratificato</p>
+                <p>
+                    <em>"Il muro come archeologia del presente. Non timeline lineare ma stratificazione esplorabile. 
+                    Il tempo non si legge, si attraversa."</em>
+                </p>
+                <p>
+                    Traduzione digitale del muro fisico dello spazio — ricoperto di sticker, locandine, manifesti 
+                    accumulati in 13 anni — in interfaccia interattiva navigabile.
+                </p>
+                <div class="muro-preview">
+                    <img src="img/logoPT_80.png" alt="Wall SpaceTime">
+                    <p><strong>1110 eventi • 15+ collettive • 13 anni</strong></p>
+                </div>
+                <div class="muro-links">
+                    <a href="https://yuricrea.github.io/wall-pt/wall_spacetime_v5.html" target="_blank" class="muro-btn">WALL SPACETIME v5 →</a>
+                    <a href="https://yuricrea.github.io/wall-pt/timeline_v2.html" target="_blank" class="muro-btn secondary">TIMELINE v2 →</a>
+                </div>
+            </div>
+
+            <!-- RILEGATURA CENTRALE -->
+            <div class="rilegatura"></div>
+
+            <!-- PAGINA DESTRA: WALL COLLETTIVE -->
+            <div class="muro-page">
+                <h3>WALL COLLETTIVE</h3>
+                <p class="subtitle">Adesso • Il Respiro del Presente</p>
+                <p>
+                    <em>"Il muro vivo. Feed aggregato che mostra chi pubblica, chi è attivo, chi è in stand-by. 
+                    Effimero, impermanente, fluido."</em>
+                </p>
+                <p>
+                    Aggregatore automatico di feed RSS e social delle collettive. Mostra in tempo reale cosa 
+                    pubblicano Off Topic, APE Milano, A-K-M-E, Ambrosia, Rete Jin. Chi pubblica molto appare denso, 
+                    chi pubblica poco appare rarefatto.
+                </p>
+                <div class="muro-preview">
+                    <img src="img/scarrafone.png" alt="Wall Collettive">
+                    <p><strong>Feed live • Effimero • Impermanente</strong></p>
+                </div>
+                <div class="muro-links">
+                    <a href="#" class="muro-btn" style="opacity: 0.5; cursor: not-allowed;">IN SVILUPPO</a>
+                    <a href="https://yuricrea.github.io/wall-pt/PROPOSTA_COMPLETA_PT.md" target="_blank" class="muro-btn tertiary">PROPOSTA COMPLETA →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EVENTI -->
+    <section class="eventi">
+        <h2>PROSSIMI EVENTI</h2>
+        <div class="eventi-grid">
+            <div class="evento-polaroid no-transition">
+                <img src="img/8M-Milano-banner.jpeg" alt="8 Marzo">
+                <div class="data">8 Marzo 2025</div>
+                <div class="titolo">Sciopero Femminista</div>
+                <div class="descrizione">Non Una Di Meno Milano. Assemblea + corteo cittadino.</div>
+            </div>
+            <div class="evento-polaroid no-transition">
+                <img src="img/Locandina-APE.jpg" alt="APE">
+                <div class="data">Marzo 2025</div>
+                <div class="titolo">Escursione APE</div>
+                <div class="descrizione">Escursionismo proletario. Montagna per tutte e tutti.</div>
+            </div>
+            <div class="evento-polaroid no-transition">
+                <img src="img/CIO-offtopic.jpeg" alt="NoOlimpiadi">
+                <div class="data">2025-2026</div>
+                <div class="titolo">NoOlimpiadi 2026</div>
+                <div class="descrizione">Contro Milano-Cortina. Assemblee e mobilitazioni.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- COLLETTIVE GRID -->
+    <section id="collettive-section" class="collettive">
+        <!-- Wall of Fame floating - Collettive -->
+        <img src="img/wallfame/FridaKahlo.png" alt="Frida Kahlo" class="wallfame-float" 
+             style="top: 15%; right: 8%; transform: rotate(4deg); width: 70px;">
+        </img>
+        
+        <h2>LE COLLETTIVE</h2>
+        <div class="collettive-grid">
+            <div class="collettiva-box no-transition" style="--hover-rotation: 5deg;">
+                <img src="img/logoPT_80.png" alt="Piano Terra">
+            </div>
+            <div class="collettiva-box no-transition" style="--hover-rotation: -3deg;">
+                <img src="img/offtopicwesite.png" alt="Off Topic">
+            </div>
+            <div class="collettiva-box no-transition" style="--hover-rotation: 4deg;">
+                <img src="img/APELOGO.jpg" alt="APE Milano">
+            </div>
+            <div class="collettiva-box no-transition" style="--hover-rotation: -5deg;">
+                <img src="img/scarrafone.png" alt="A-K-M-E">
+            </div>
+            <div class="collettiva-box no-transition" style="--hover-rotation: 3deg;">
+                <img src="img/sanprecariologo.png" alt="San Precario">
+            </div>
+            <div class="collettiva-box no-transition" style="--hover-rotation: -4deg;">
+                <img src="img/pieghevole.jpg" alt="Pieghevole">
+            </div>
+            <div class="collettiva-box no-transition" style="--hover-rotation: 5deg;">
+                <img src="img/8M-Milano-banner.jpeg" alt="Ambrosia">
+            </div>
+            <div class="collettiva-box no-transition" style="--hover-rotation: -3deg;">
+                <img src="img/CIO-offtopic.jpeg" alt="NoOlimpiadi">
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         WALL OF FAME - CHI CI ISPIRA
+    ============================================ -->
+    <section id="wallfame" class="wallfame-section">
+        <h2>WALL OF FAME</h2>
+        <p class="subtitle">Chi ci ispira, chi cospira con noi</p>
+        
+        <div class="wallfame-grid">
+            <div class="wallfame-card" style="--card-rotation: -3deg;">
+                <img src="img/wallfame/karlmarx.png" alt="Karl Marx">
+                <div class="tooltip">Karl Marx</div>
+            </div>
+            <div class="wallfame-card" style="--card-rotation: 2deg;">
+                <img src="img/wallfame/antoniogramsci.png" alt="Antonio Gramsci">
+                <div class="tooltip">Antonio Gramsci</div>
+            </div>
+            <div class="wallfame-card" style="--card-rotation: -1deg;">
+                <img src="img/wallfame/FridaKahlo.png" alt="Frida Kahlo">
+                <div class="tooltip">Frida Kahlo</div>
+            </div>
+            <div class="wallfame-card" style="--card-rotation: 4deg;">
+                <img src="img/wallfame/georgeorwell.png" alt="George Orwell">
+                <div class="tooltip">George Orwell</div>
+            </div>
+            <div class="wallfame-card" style="--card-rotation: -2deg;">
+                <img src="img/wallfame/frankzappa.png" alt="Frank Zappa">
+                <div class="tooltip">Frank Zappa</div>
+            </div>
+            <div class="wallfame-card" style="--card-rotation: 3deg;">
+                <img src="img/wallfame/angeladavis.png" alt="Angela Davis">
+                <div class="tooltip">Angela Davis</div>
+            </div>
+            <div class="wallfame-card" style="--card-rotation: -4deg;">
+                <img src="img/wallfame/rosaparks.png" alt="Rosa Parks">
+                <div class="tooltip">Rosa Parks</div>
+            </div>
+            <div class="wallfame-card" style="--card-rotation: 1deg;">
+                <img src="img/wallfame/marilyn_monroe.png" alt="Marilyn Monroe">
+                <div class="tooltip">Marilyn Monroe</div>
+            </div>
+            <div class="wallfame-card" style="--card-rotation: 2deg;">
+                <img src="img/wallfame/joestrummer.png" alt="Joe Strummer">
+                <div class="tooltip">Joe Strummer</div>
+            </div>
+            <div class="wallfame-card" style="--card-rotation: -3deg;">
+                <img src="img/wallfame/pietrogori.png" alt="Pietro Gori">
+                <div class="tooltip">Pietro Gori</div>
+            </div>
+            <div class="wallfame-card" style="--card-rotation: 4deg;">
+                <img src="img/wallfame/pussyriot.png" alt="Pussy Riot">
+                <div class="tooltip">Pussy Riot</div>
+            </div>
+            <div class="wallfame-card" style="--card-rotation: -2deg;">
+                <img src="img/wallfame/sanprecario.png" alt="San Precario">
+                <div class="tooltip">San Precario</div>
+            </div>
+            <div class="wallfame-card" style="--card-rotation: 3deg;">
+                <img src="img/wallfame/doraemon.png" alt="Doraemon">
+                <div class="tooltip">Doraemon</div>
+            </div>
+        </div>
+
+        <!-- Box info dinamico -->
+        <div class="wallfame-info-box" id="wallfameInfo">
+            <div class="bio active" id="bioDefault">
+                <h3>Chi Ci Ispira</h3>
+                <p>
+                    13 compagni e compagne che hanno attraversato il muro del tempo. 
+                    Rivoluzionari, artisti, ribelli, pensatori. Da Marx a Doraemon, 
+                    da Rosa Parks a San Precario. Passa il mouse sui personaggi per scoprire 
+                    cosa rappresentano per noi.
+                </p>
+            </div>
+            
+            <div class="bio" id="bio-marx">
+                <h3>Karl Marx (1818-1883)</h3>
+                <p><em>"I lavoratori non hanno nulla da perdere se non le loro catene."</em><br>
+                Filosofo, economista, critico del capitalismo. Il suo pensiero attraversa tutto quello che facciamo al PT.</p>
+            </div>
+            
+            <div class="bio" id="bio-gramsci">
+                <h3>Antonio Gramsci (1891-1937)</h3>
+                <p><em>"Odio gli indifferenti."</em><br>
+                Filosofo marxista italiano. I suoi Quaderni dal carcere sono strumenti di lotta e comprensione dell'egemonia culturale.</p>
+            </div>
+            
+            <div class="bio" id="bio-frida">
+                <h3>Frida Kahlo (1907-1954)</h3>
+                <p><em>"Pies, para qué los quiero si tengo alas pa' volar."</em><br>
+                Pittrice messicana, femminista, comunista. Il suo corpo ferito diventa arte e resistenza.</p>
+            </div>
+            
+            <div class="bio" id="bio-orwell">
+                <h3>George Orwell (1903-1950)</h3>
+                <p><em>"In tempi di menzogna universale, dire la verità è rivoluzionario."</em><br>
+                Scrittore antiautoritario. 1984 e La fattoria degli animali sono manuali contro totalitarismi.</p>
+            </div>
+            
+            <div class="bio" id="bio-zappa">
+                <h3>Frank Zappa (1940-1993)</h3>
+                <p><em>"La mente è come un paracadute. Funziona solo se si apre."</em><br>
+                Musicista anti-conformista, critico feroce dell'industria culturale e della censura.</p>
+            </div>
+            
+            <div class="bio" id="bio-angela">
+                <h3>Angela Davis (1944-)</h3>
+                <p><em>"Non accetto più le cose che non posso cambiare. Cambio le cose che non posso accettare."</em><br>
+                Attivista afroamericana, Black Panthers, femminista marxista. Lotta contro razzismo e sistema carcerario.</p>
+            </div>
+            
+            <div class="bio" id="bio-rosa">
+                <h3>Rosa Parks (1913-2005)</h3>
+                <p><em>"You must never be fearful about what you are doing when it is right."</em><br>
+                Attivista diritti civili. Il suo rifiuto sull'autobus scatenò il movimento per i diritti civili USA.</p>
+            </div>
+            
+            <div class="bio" id="bio-marilyn">
+                <h3>Marilyn Monroe (1926-1962)</h3>
+                <p><em>"Imperfection is beauty, madness is genius."</em><br>
+                Icona ribelle, sfruttata da Hollywood. Simbolo della violenza del sistema dello spettacolo.</p>
+            </div>
+            
+            <div class="bio" id="bio-strummer">
+                <h3>Joe Strummer (1952-2002)</h3>
+                <p><em>"The future is unwritten."</em><br>
+                Frontman The Clash, punk politico. Musica come arma contro razzismo, militarismo, Thatcher.</p>
+            </div>
+            
+            <div class="bio" id="bio-gori">
+                <h3>Pietro Gori (1865-1911)</h3>
+                <p><em>"Per l'anarchia!"</em><br>
+                Anarchico italiano, avvocato dei poveri, poeta. Difese operai e ribelli in tribunale e sulla scena.</p>
+            </div>
+            
+            <div class="bio" id="bio-pussy">
+                <h3>Pussy Riot (2011-)</h3>
+                <p><em>"Putin will teach you to love the Motherland."</em> (ironia feroce)<br>
+                Collettivo punk femminista russo. Performance contro Putin, chiesa ortodossa, patriarcato.</p>
+            </div>
+            
+            <div class="bio" id="bio-sanprecario">
+                <h3>San Precario</h3>
+                <p><em>"Santo patrono dei precari e flessibili."</em><br>
+                Nato al PT! Il santo dei lavoratori precari, sfruttati, flessibilizzati. Il santo che protegge chi un santo non ce l'ha.</p>
+            </div>
+            
+            <div class="bio" id="bio-doraemon">
+                <h3>Doraemon</h3>
+                <p><em>"Il futuro non è scritto, lo costruiamo insieme."</em><br>
+                Gatto robot dal futuro. Rappresenta la tecnologia al servizio delle persone, non del profitto.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gamification Counter - Rimosso -->
+
+
+    <!-- FOOTER -->
+    <footer id="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Piano Terra Lab</h3>
+                <p>Via Confalonieri 3<br>20124 Milano<br>Quartiere Isola</p>
+                <p style="margin-top: 1rem;"><strong>Spazio occupato autogestito dal 2012</strong></p>
+            </div>
+            <div class="footer-section">
+                <h3>Social & Contatti</h3>
+                <a href="https://t.me/pianoterralab" target="_blank">Telegram</a>
+                <a href="https://mastodon.uno/@pianoterralab" target="_blank">Mastodon</a>
+                <a href="https://puntello.org/" target="_blank">Puntello</a>
+                <a href="/cdn-cgi/l/email-protection#0c65626a634c7c656d626378697e7e6d606d6e22637e6b"><span class="__cf_email__" data-cfemail="cda4a3aba28dbda4aca3a2b9a8bfbfaca1acafe3a2bfaa">[email&#160;protected]</span></a>
+            </div>
+            <div class="footer-section">
+                <h3>Link</h3>
+                <a href="https://www.pianoterralab.org/calendario/" target="_blank">Calendario Eventi</a>
+                <a href="https://www.pianoterralab.org/i-gruppi-del-pt/" target="_blank">Collettive</a>
+                <a href="https://github.com/yuricrea/wall-pt" target="_blank">GitHub Wall Project</a>
+                <a href="https://bdsmovement.net/" target="_blank">BDS Movement</a>
+            </div>
+            <div class="footer-section">
+                <h3>Manifesto</h3>
+                <p>
+                    Antifascista • Anticapitalista<br>
+                    Femminista • Queer-Friendly<br>
+                    Solidarietà Palestina<br>
+                    Solidarietà Kurdistan<br>
+                    Autogestione • Mutualismo
+                </p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2012-2025 Piano Terra Lab<br>
+            Copyleft ↺ Fai quello che vuoi, ma cita la fonte</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // ============================================
+        // THEME SYSTEM
+        // ============================================
+        const themes = {
+            transfemminista: {
+                '--primary': '#D92A61',
+                '--secondary': '#EF97C7',
+                '--accent': '#64359B',
+                '--bg': '#f5f0e8',
+                '--text': '#43112A',
+                '--text-alt': '#f5f0e8',
+                '--bg-alt': '#1E113C',
+                '--shadow': 'rgba(0,0,0,0.15)',
+                '--font-main': 'Quicksand, sans-serif',
+                '--font-title': 'Archivo Black, sans-serif',
+                '--font-handwritten': 'Courier Prime, monospace',
+                '--pattern-opacity': '0.05',
+                '--noise-opacity': '0.03',
+                '--text-on-primary': '#ffffff',
+                '--text-on-secondary': '#000000',
+                '--text-on-accent': '#ffffff'
+            },
+            darkpunk: {
+                '--primary': '#A67032',
+                '--secondary': '#586C77',
+                '--accent': '#3E0B00',
+                '--bg': '#151517',
+                '--text': '#ffffff',
+                '--text-alt': '#ffffff',
+                '--bg-alt': '#2a2a2c',
+                '--shadow': 'rgba(0,0,0,0.3)',
+                '--font-main': 'Special Elite, monospace',
+                '--font-title': 'Archivo Black, sans-serif',
+                '--font-handwritten': 'Special Elite, monospace',
+                '--pattern-opacity': '0.03',
+                '--noise-opacity': '0.12',
+                '--text-on-primary': '#ffffff',
+                '--text-on-secondary': '#ffffff',
+                '--text-on-accent': '#ffffff'
+            },
+            ecologiasociale: {
+                '--primary': '#F49F2A',
+                '--secondary': '#8B7550',
+                '--accent': '#8FB15A',
+                '--bg': '#faf8f3',
+                '--text': '#3E574D',
+                '--text-alt': '#faf8f3',
+                '--bg-alt': '#BD1763',
+                '--shadow': 'rgba(0,0,0,0.1)',
+                '--font-main': 'Courier Prime, monospace',
+                '--font-title': 'Archivo Black, sans-serif',
+                '--font-handwritten': 'Courier Prime, monospace',
+                '--pattern-opacity': '0.04',
+                '--noise-opacity': '0.05',
+                '--text-on-primary': '#000000',
+                '--text-on-secondary': '#ffffff',
+                '--text-on-accent': '#000000'
+            },
+            palestina: {
+                '--primary': '#CE1127',
+                '--secondary': '#027A3E',
+                '--accent': '#000000',
+                '--bg': '#FFFFFF',
+                '--text': '#000000',
+                '--text-alt': '#000000',
+                '--bg-alt': '#f5f5f5',
+                '--shadow': 'rgba(0,0,0,0.2)',
+                '--font-main': 'Space Mono, monospace',
+                '--font-title': 'Archivo Black, sans-serif',
+                '--font-handwritten': 'Space Mono, monospace',
+                '--pattern-opacity': '0.03',
+                '--noise-opacity': '0.02',
+                '--text-on-primary': '#ffffff',
+                '--text-on-secondary': '#ffffff',
+                '--text-on-accent': '#ffffff'
+            },
+            urbanactivist: {
+                '--primary': '#E2B23E',
+                '--secondary': '#B15578',
+                '--accent': '#78A444',
+                '--bg': '#f0ebe5',
+                '--text': '#060401',
+                '--text-alt': '#f0ebe5',
+                '--bg-alt': '#1B3941',
+                '--shadow': 'rgba(0,0,0,0.15)',
+                '--font-main': 'Space Mono, monospace',
+                '--font-title': 'Archivo Black, sans-serif',
+                '--font-handwritten': 'Courier Prime, monospace',
+                '--pattern-opacity': '0.06',
+                '--noise-opacity': '0.08',
+                '--text-on-primary': '#000000',
+                '--text-on-secondary': '#ffffff',
+                '--text-on-accent': '#000000'
+            }
+        };
+
+        function switchTheme(themeName) {
+            const theme = themes[themeName];
+            const root = document.documentElement;
+            
+            // Apply CSS variables
+            Object.keys(theme).forEach(key => {
+                root.style.setProperty(key, theme[key]);
+            });
+            
+            // Save preference
+            localStorage.setItem('pt-theme', themeName);
+            
+            // Update active button
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.theme === themeName);
+            });
+
+            // Flash effect
+            document.body.classList.add('theme-changing');
+            setTimeout(() => {
+                document.body.classList.remove('theme-changing');
+            }, 500);
+        }
+
+        function togglePalette() {
+            const selector = document.getElementById('paletteSelector');
+            selector.classList.toggle('open');
+        }
+
+        // Close palette when clicking outside
+        document.addEventListener('click', (e) => {
+            const switcher = document.querySelector('.theme-switcher');
+            const selector = document.getElementById('paletteSelector');
+            if (!switcher.contains(e.target) && selector.classList.contains('open')) {
+                selector.classList.remove('open');
+            }
+        });
+
+        // Load saved theme on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('pt-theme') || 'transfemminista';
+            switchTheme(saved);
+        });
+
+        // ============================================
+        // SMOOTH SCROLL
+        // ============================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ============================================
+        // COLLETTIVE RANDOM ROTATION ON HOVER
+        // ============================================
+        document.querySelectorAll('.collettiva-box').forEach(box => {
+               box.addEventListener('mouseenter', () => {
+                const rotation = (Math.random() - 0.5) * 15;
+                box.style.setProperty('--hover-rotation', `${rotation}deg`);
+            });
+        });
+
+        // ============================================
+        // SCOTCH TAPE RANDOMIZATION
+        // ============================================
+        document.querySelectorAll('.scotch-tape').forEach(tape => {
+            // Random rotation variation (±3 degrees from base)
+            const currentRotation = tape.style.transform.match(/rotate\((-?\d+)deg\)/);
+            const baseRotation = currentRotation ? parseInt(currentRotation[1]) : 0;
+            const randomRotation = baseRotation + (Math.random() - 0.5) * 6;
+            
+            // Random opacity (0.3 to 0.5)
+            const randomOpacity = 0.3 + Math.random() * 0.2;
+            
+            // Random slight position shift (±3px)
+            const randomX = (Math.random() - 0.5) * 6;
+            const randomY = (Math.random() - 0.5) * 6;
+            
+            // Apply randomization
+            tape.style.transform = `rotate(${randomRotation}deg) translate(${randomX}px, ${randomY}px)`;
+            tape.style.opacity = randomOpacity;
+        });
+
+        // ============================================
+        // WALL OF FAME - BIO DINAMICHE
+        // ============================================
+        
+        const bioMapping = {
+            'karlmarx.png': 'bio-marx',
+            'antoniogramsci.png': 'bio-gramsci',
+            'FridaKahlo.png': 'bio-frida',
+            'georgeorwell.png': 'bio-orwell',
+            'frankzappa.png': 'bio-zappa',
+            'angeladavis.png': 'bio-angela',
+            'rosaparks.png': 'bio-rosa',
+            'marilyn_monroe.png': 'bio-marilyn',
+            'joestrummer.png': 'bio-strummer',
+            'pietrogori.png': 'bio-gori',
+            'pussyriot.png': 'bio-pussy',
+            'sanprecario.png': 'bio-sanprecario',
+            'doraemon.png': 'bio-doraemon'
+        };
+        
+        // Gestione hover su personaggi
+        document.querySelectorAll('.wallfame-card, .wallfame-float').forEach(card => {
+            const img = card.querySelector('img');
+            if (!img) return;
+            
+            const filename = img.src.split('/').pop();
+            const bioId = bioMapping[filename];
+            
+            if (bioId) {
+                card.addEventListener('mouseenter', () => {
+                    // Nascondi tutte le bio
+                    document.querySelectorAll('.wallfame-info-box .bio').forEach(bio => {
+                        bio.classList.remove('active');
+                    });
+                    
+                    // Mostra bio specifica
+                    const targetBio = document.getElementById(bioId);
+                    if (targetBio) {
+                        targetBio.classList.add('active');
+                    }
+                });
+            }
+        });
+        
+        // Reset a default quando mouse esce dal wall of fame
+        const wallfameSection = document.getElementById('wallfame');
+        if (wallfameSection) {
+            wallfameSection.addEventListener('mouseleave', () => {
+                document.querySelectorAll('.wallfame-info-box .bio').forEach(bio => {
+                    bio.classList.remove('active');
+                });
+                document.getElementById('bioDefault').classList.add('active');
+            });
+        }
+
+        // ============================================
+        // WALL OF FAME - CUSTOM CURSORS
+        // ============================================
+        
+        // Custom cursor setup
+        const cursorPersonaggi = [
+            { id: 'pussyriot', img: 'img/wallfame/pussyriot.png', name: 'Pussy Riot' },
+            { id: 'marilyn', img: 'img/wallfame/marilyn_monroe.png', name: 'Marilyn Monroe' },
+            { id: 'sanprecario', img: 'img/wallfame/sanprecario.png', name: 'San Precario' }
+        ];
+        
+        let activeCursor = null;
+        let cursorElements = {};
+        
+        // Crea elementi cursor floating
+        cursorPersonaggi.forEach((person, index) => {
+            const el = document.createElement('div');
+            el.className = 'wallfame-cursor-option';
+            el.id = `cursor-${person.id}`;
+            el.innerHTML = `
+                <img src="${person.img}" alt="${person.name}" style="max-width: 100%; height: auto; display: block;">
+                <div class="cursor-tooltip">Usami come cursore!</div>
+            `;
+            el.style.cssText = `
+                position: fixed;
+                bottom: ${100 + (index * 110)}px;
+                right: 30px;
+                width: 70px;
+                cursor: pointer;
+                z-index: 999;
+                transition: all 0.3s ease;
+                opacity: 0.6;
+            `;
+            
+            // Click attiva cursore
+            el.addEventListener('click', () => {
+                activateCursor(person.id, person.img);
+            });
+            
+            // Hover tooltip
+            el.addEventListener('mouseenter', () => {
+                el.querySelector('.cursor-tooltip').style.opacity = '1';
+            });
+            el.addEventListener('mouseleave', () => {
+                el.querySelector('.cursor-tooltip').style.opacity = '0';
+            });
+            
+            document.body.appendChild(el);
+            cursorElements[person.id] = el;
+        });
+        
+        // CSS tooltip inline
+        const style = document.createElement('style');
+        style.textContent = `
+            .cursor-tooltip {
+                position: absolute;
+                bottom: -40px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: var(--primary);
+                color: var(--text-on-primary);
+                padding: 0.5rem 1rem;
+                font-size: 0.7rem;
+                white-space: nowrap;
+                opacity: 0;
+                pointer-events: none;
+                border-radius: 5px;
+                transition: opacity 0.2s;
+            }
+            
+            .wallfame-cursor-option.active {
+                opacity: 1;
+                transform: scale(1.1);
+                box-shadow: 0 0 20px var(--primary);
+            }
+            
+            body.custom-cursor {
+                cursor: none !important;
+            }
+            
+            body.custom-cursor * {
+                cursor: none !important;
+            }
+            
+            #customCursorImg {
+                position: fixed;
+                width: 40px;
+                height: 40px;
+                pointer-events: none;
+                z-index: 9999;
+                transform: translate(-50%, -50%);
+                transition: opacity 0.1s;
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Crea immagine cursore custom
+        const cursorImg = document.createElement('img');
+        cursorImg.id = 'customCursorImg';
+        cursorImg.style.display = 'none';
+        document.body.appendChild(cursorImg);
+        
+        // Funzione attivazione cursore
+        function activateCursor(personId, imgSrc) {
+            if (activeCursor === personId) {
+                // Deattiva
+                deactivateCursor();
+            } else {
+                // Attiva nuovo
+                activeCursor = personId;
+                
+                // Reset altri
+                Object.values(cursorElements).forEach(el => el.classList.remove('active'));
+                
+                // Attiva selezionato
+                cursorElements[personId].classList.add('active');
+                
+                // Applica cursor
+                document.body.classList.add('custom-cursor');
+                cursorImg.src = imgSrc;
+                cursorImg.style.display = 'block';
+                
+                // Salva preferenza
+                localStorage.setItem('pt-cursor', personId);
+            }
+        }
+        
+        // Funzione deattivazione
+        function deactivateCursor() {
+            activeCursor = null;
+            document.body.classList.remove('custom-cursor');
+            cursorImg.style.display = 'none';
+            Object.values(cursorElements).forEach(el => el.classList.remove('active'));
+            localStorage.removeItem('pt-cursor');
+        }
+        
+        // Movimento cursore
+        document.addEventListener('mousemove', (e) => {
+            if (activeCursor) {
+                cursorImg.style.left = e.clientX + 'px';
+                cursorImg.style.top = e.clientY + 'px';
+            }
+        });
+        
+        // Ripristina cursore salvato
+        const savedCursor = localStorage.getItem('pt-cursor');
+        if (savedCursor) {
+            const person = cursorPersonaggi.find(p => p.id === savedCursor);
+            if (person) {
+                activateCursor(person.id, person.img);
+            }
+        }
+        
+        // Aggiorna counter (non più easter eggs, ma cursori disponibili)
+        
+        // ============================================
+        // HERO BACKGROUND ROTATION v1.0
+        // ============================================
+        
+        const heroImages = [
+            '', // Hero 00: NO background, solo testi
+            'img/heros/pthero_00.jpg', // Hero 01: Scarrafone Quite a Village
+            'img/heros/pthero_03.jpg', // Hero 02: Milano Horror Stories
+            'img/heros/pthero_04.jpg', // Hero 03: A-K-M-E Cyberpunk
+            'img/heros/pthero_06.jpg', // Hero 04: 8 Marzo NUDM
+            'img/heros/pthero_08.jpg'  // Hero 05: Megafono colorato
+        ];
+        
+        let currentHeroIndex = 0;
+        let heroRotationInterval = null;
+        let heroStarted = false;
+        
+        const heroSection = document.getElementById('hero');
+        const heroContent = document.querySelector('.hero-content');
+        const heroControls = document.getElementById('heroControls');
+        const heroDots = document.getElementById('heroDots');
+        const heroPrev = document.getElementById('heroPrev');
+        const heroNext = document.getElementById('heroNext');
+        
+        // Preload solo immagini vere (skip prima vuota)
+        heroImages.forEach(src => {
+            if (src) { // Skip stringa vuota
+                const img = new Image();
+                img.src = src;
+            }
+        });
+        
+        // Genera pallini indicatori (6 pallini)
+        heroImages.forEach((img, index) => {
+            const dot = document.createElement('button');
+            dot.className = 'hero-dot';
+            if (index === 0) dot.classList.add('active');
+            dot.setAttribute('aria-label', `Hero ${index + 1}`);
+            dot.onclick = () => jumpToHero(index);
+            heroDots.appendChild(dot);
+        });
+        
+        // Aggiorna pallino attivo
+        function updateDots() {
+            const dots = heroDots.querySelectorAll('.hero-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentHeroIndex);
+            });
+        }
+        
+        // Cambia hero
+        function setHero(index) {
+            currentHeroIndex = index;
+            
+            if (index === 0) {
+                // Hero 00: NO background, MOSTRA testi
+                heroSection.style.backgroundImage = 'none';
+                heroSection.classList.remove('has-background');
+                heroContent.style.display = 'block';
+            } else {
+                // Hero 01-05: background image, NASCONDI testi
+                heroSection.style.backgroundImage = `url('${heroImages[currentHeroIndex]}')`;
+                heroSection.classList.add('has-background');
+                heroContent.style.display = 'none';
+            }
+            
+            updateDots();
+        }
+        
+        // Jump a hero specifica (click pallino)
+        function jumpToHero(index) {
+            setHero(index);
+            resetRotation();
+        }
+        
+        // Rotazione automatica
+        function rotateHero() {
+            currentHeroIndex = (currentHeroIndex + 1) % heroImages.length;
+            setHero(currentHeroIndex);
+        }
+        
+        // Reset rotazione (riavvia timer)
+        function resetRotation() {
+            if (heroRotationInterval) {
+                clearInterval(heroRotationInterval);
+            }
+            if (heroStarted) {
+                heroRotationInterval = setInterval(rotateHero, 5000); // 5s
+            }
+        }
+        
+        // Navigazione frecce
+        heroPrev.onclick = () => {
+            currentHeroIndex = (currentHeroIndex - 1 + heroImages.length) % heroImages.length;
+            setHero(currentHeroIndex);
+            resetRotation();
+        };
+        
+        heroNext.onclick = () => {
+            currentHeroIndex = (currentHeroIndex + 1) % heroImages.length;
+            setHero(currentHeroIndex);
+            resetRotation();
+        };
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (heroStarted) {
+                if (e.key === 'ArrowLeft') {
+                    heroPrev.click();
+                } else if (e.key === 'ArrowRight') {
+                    heroNext.click();
+                }
+            }
+        });
+        
+        // Pause su hover hero
+        heroSection.addEventListener('mouseenter', () => {
+            if (heroRotationInterval) {
+                clearInterval(heroRotationInterval);
+                heroRotationInterval = null;
+            }
+        });
+        
+        heroSection.addEventListener('mouseleave', () => {
+            if (heroStarted && !heroRotationInterval) {
+                heroRotationInterval = setInterval(rotateHero, 5000); // 5s
+            }
+        });
+        
+        // START DELAYED (5s) - Prima hero appare dopo 5 secondi
+        setTimeout(() => {
+            heroStarted = true;
+            setHero(0); // Prima hero (senza bg, solo testi)
+            heroControls.classList.add('visible'); // Show controls
+            heroRotationInterval = setInterval(rotateHero, 5000); // Start auto-rotation 5s
+        }, 5000); // 5 secondi delay
+        
+        // ============================================
+        // SIDEBAR TOGGLE
+        // ============================================
+        
+        const hamburger = document.getElementById('hamburger');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const sidebarCollettiveLink = document.getElementById('sidebarCollettive');
+        
+        // Toggle sidebar
+        function toggleSidebar() {
+            hamburger.classList.toggle('active');
+            sidebar.classList.toggle('open');
+            sidebarOverlay.classList.toggle('active');
+        }
+        
+        // Click hamburger
+        hamburger.addEventListener('click', toggleSidebar);
+        
+        // Click overlay chiude sidebar
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+        
+        // Click link collettive: chiude sidebar e scrolla
+        sidebarCollettiveLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleSidebar();
+            setTimeout(() => {
+                document.getElementById('collettive-section').scrollIntoView({behavior: 'smooth'});
+            }, 300);
+        });
+        
+    </script>
+
+</body>
+</html>
